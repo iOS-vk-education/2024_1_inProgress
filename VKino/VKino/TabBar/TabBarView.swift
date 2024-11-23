@@ -19,7 +19,7 @@ struct TabBar: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            MainScreenView(networkService: networkService)
+           HomeView(networkService: networkService)
                 .tabItem {
                     Image(systemName: "house.fill")
                         .renderingMode(.template)

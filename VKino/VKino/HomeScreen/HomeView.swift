@@ -8,8 +8,9 @@
 import SwiftUI
 import Kingfisher
 
-struct MainScreenView: View {
-    @StateObject private var viewModel: SearchViewModel
+struct HomeView: View {
+    @StateObject private var searchViewModel: SearchViewModel
+    @StateObject private var homeViewModel: HomeViewModel
     @EnvironmentObject var router: Router
     
     @State private var showCancelButton = false
@@ -18,24 +19,25 @@ struct MainScreenView: View {
     
     init(networkService: NetworkService) {
         self.networkService = networkService
-        _viewModel = StateObject(wrappedValue: SearchViewModel(networkService: networkService))
+        _searchViewModel = StateObject(wrappedValue: SearchViewModel(networkService: networkService))
+        _homeViewModel  = StateObject(wrappedValue: HomeViewModel(networkService: networkService))
     }
     
     var body: some View {
         NavigationStack(path: $router.path) {
             VStack(spacing: 16) {
                 HStack {
-                    TextField("Search", text: $viewModel.searchText, onEditingChanged: { isEditing in
-                        showCancelButton = isEditing || !viewModel.searchText.isEmpty
+                    TextField("Search", text: $searchViewModel.searchText, onEditingChanged: { isEditing in
+                        showCancelButton = isEditing || !searchViewModel.searchText.isEmpty
                     })
                     .padding(8)
                     .padding(.horizontal, 8)
                     .background(Color(.systemGray6))
-                    .cornerRadius(8)
+                    .cornerRadius(10)
                     
                     if showCancelButton {
                         Button("Cancel") {
-                            viewModel.searchText = ""
+                            searchViewModel.searchText = ""
                             showCancelButton = false
                             UIApplication.shared.endEditing()
                         }
@@ -45,17 +47,17 @@ struct MainScreenView: View {
                 .padding(.horizontal, 16)
                 .frame(height: 36)
                 
-                if !viewModel.searchText.isEmpty && !viewModel.movies.isEmpty {
+                if !searchViewModel.searchText.isEmpty && !searchViewModel.movies.isEmpty {
                     ScrollView {
                         LazyVStack {
-                            ForEach(viewModel.movies, id: \.id) { movie in
+                            ForEach(searchViewModel.movies, id: \.id) { movie in
                                 MovieRow(movie: movie)
                                     .padding(.horizontal, 16)
                                     .padding(.top, 8)
                                     .onAppear {
-                                        if movie == viewModel.movies.last {
+                                        if movie == searchViewModel.movies.last {
                                             Task {
-                                                await viewModel.searchMovies(query: viewModel.searchText)
+                                                await searchViewModel.searchMovies(query: searchViewModel.searchText)
                                             }
                                         }
                                     }
@@ -66,7 +68,31 @@ struct MainScreenView: View {
                         }
                     }
                 } else {
-                    Spacer()
+                    ScrollView {
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible(), spacing: 8),
+                                GridItem(.flexible(), spacing: 8)
+                            ],
+                            spacing: 16
+                        ) {
+                            ForEach(homeViewModel.savedMovies, id: \.id) { movie in
+                                KFImage(URL(string: movie.poster?.url ?? ""))
+                                    .resizable()
+                                    .placeholder {
+                                        ProgressView()
+                                            .frame(width: 171, height: 245)
+                                    }
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 171, height: 245)
+                                    .cornerRadius(6)
+                                    .onTapGesture {
+                                        router.path.append(.movieDetail(movie: movie))
+                                    }
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
                 }
             }
             .padding(.top, 16)
