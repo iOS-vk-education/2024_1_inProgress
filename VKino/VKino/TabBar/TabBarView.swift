@@ -26,6 +26,7 @@ struct TabBar: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
+            // TODO: one more tab with kinopoisk recomendations
             HomeView(networkService: networkService, searchViewModel: searchViewModel)
                 .tabItem {
                     Image(systemName: "house.fill")
@@ -33,7 +34,7 @@ struct TabBar: View {
                 }
                 .tag(Tab.home)
 
-            AddMovieView(searchViewModel: searchViewModel) // TODO: DetailsView()
+            AddMovieView(searchViewModel: searchViewModel)
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
                         .renderingMode(.template)

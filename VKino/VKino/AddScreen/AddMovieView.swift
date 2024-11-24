@@ -32,7 +32,7 @@ struct AddMovieView: View {
 
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(spacing: 16) {
                 Button("Search on Kinopoisk") {
                     showingSearch = true
                 }

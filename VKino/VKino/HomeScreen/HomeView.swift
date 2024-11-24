@@ -11,18 +11,18 @@ import Kingfisher
 struct HomeView: View {
     @ObservedObject private var searchViewModel: SearchViewModel
     private let networkService: NetworkServiceProtocol
-    
+
     @EnvironmentObject var router: Router
 
     @StateObject private var homeViewModel: HomeViewModel
     @State private var showCancelButton = false
-    
+
     init(networkService: NetworkService, searchViewModel: SearchViewModel) {
         self.networkService = networkService
         self.searchViewModel = searchViewModel
         _homeViewModel  = StateObject(wrappedValue: HomeViewModel(networkService: networkService))
     }
-    
+
     var body: some View {
         NavigationStack(path: $router.path) {
             SearchView(
@@ -52,7 +52,7 @@ struct HomeView: View {
                                 }
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, Consts.Paddings.buttonPadding)
                 }
             }.navigationDestination(for: MovieRoute.self) { route in
                 switch route {
@@ -64,3 +64,9 @@ struct HomeView: View {
     }
 }
 
+// TODO: перенести рамеры в константы
+enum Consts {
+    enum Paddings {
+        static let buttonPadding: CGFloat = 16
+    }
+}

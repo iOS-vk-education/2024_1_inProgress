@@ -16,13 +16,13 @@ struct SearchView<Content: View>: View {
 
     let content: Content
     let onMovieSelected: (MovieInfo) -> Void
-    
+
     init(searchViewModel: SearchViewModel, onMovieSelected: @escaping (MovieInfo) -> Void, @ViewBuilder content: () -> Content) {
         self.searchViewModel = searchViewModel
         self.content = content()
         self.onMovieSelected = onMovieSelected
     }
-    
+
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -53,13 +53,6 @@ struct SearchView<Content: View>: View {
                             MovieRow(movie: movie)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 8)
-                                .onAppear {
-                                    if movie == searchViewModel.movies.last {
-                                        Task {
-                                            await searchViewModel.searchMovies(query: searchViewModel.searchText)
-                                        }
-                                    }
-                                }
                                 .onTapGesture {
                                     onMovieSelected(movie)
                                     router.path.append(.movieDetail(movie: movie))

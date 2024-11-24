@@ -27,7 +27,7 @@ class HomeViewModel: ObservableObject {
     )
 
     @Published var savedMovies: [MovieInfo]
-        
+
     private let networkService: NetworkServiceProtocol
 
     init(networkService: NetworkServiceProtocol) {
