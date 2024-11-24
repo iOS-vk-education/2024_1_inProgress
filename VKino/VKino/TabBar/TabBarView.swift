@@ -9,7 +9,14 @@ import SwiftUI
 
 struct TabBar: View {
     @State private var selectedTab: Tab = .home
-    let networkService: NetworkService
+    @StateObject private var searchViewModel: SearchViewModel
+    
+    private let networkService: NetworkService
+    
+    init(networkService: NetworkService) {
+        self.networkService = networkService
+        _searchViewModel  = StateObject(wrappedValue: SearchViewModel(networkService: networkService))
+    }
 
     enum Tab {
         case home
@@ -19,14 +26,14 @@ struct TabBar: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-           HomeView(networkService: networkService)
+            HomeView(networkService: networkService, searchViewModel: searchViewModel)
                 .tabItem {
                     Image(systemName: "house.fill")
                         .renderingMode(.template)
                 }
                 .tag(Tab.home)
 
-            ContentView() // TODO: DetailsView()
+            AddMovieView(searchViewModel: searchViewModel) // TODO: DetailsView()
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
                         .renderingMode(.template)

@@ -5,6 +5,8 @@
 //  Created by Konstantin on 20.11.2024.
 //
 
+import Foundation
+
 struct Movies: Decodable {
     let docs: [MovieInfo]
     let total: Int
@@ -34,6 +36,18 @@ struct MovieInfo: Decodable, Equatable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+}
+
+struct MovieEditable {
+    var id: Int
+    var title: String
+    var originalTitle: String
+    var category: String
+    var duration: String
+    var description: String
+    var author: String
+    var imageData: Data?
+    var actors: String
 }
 
 struct Poster: Decodable {

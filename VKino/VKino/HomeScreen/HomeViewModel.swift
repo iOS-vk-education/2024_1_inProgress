@@ -36,7 +36,7 @@ class HomeViewModel: ObservableObject {
         for index in 1...15 {
             movies.append(
                 MovieInfo(
-                    id: index, // Уникальный ID
+                    id: index,
                     name: baseMovie.name,
                     alternativeName: baseMovie.alternativeName,
                     type: baseMovie.type,
