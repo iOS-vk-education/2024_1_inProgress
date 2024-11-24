@@ -99,7 +99,7 @@ struct HomeView: View {
             .navigationDestination(for: MovieRoute.self) { route in
                 switch route {
                 case .movieDetail(let movie):
-                    ContentView() // TODO: MovieDetailView(movie: movie, networkService: networkService)
+                    MovieDetailsView(movie: movie, networkService: networkService)//ContentView() // TODO: MovieDetailView(movie: movie, networkService: networkService)
                 }
             }
         }
