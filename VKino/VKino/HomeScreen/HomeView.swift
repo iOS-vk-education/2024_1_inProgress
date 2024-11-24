@@ -10,24 +10,22 @@ import Kingfisher
 
 struct HomeView: View {
     @ObservedObject private var searchViewModel: SearchViewModel
-    private let networkService: NetworkServiceProtocol
 
     @EnvironmentObject var router: Router
 
     @StateObject private var homeViewModel: HomeViewModel
     @State private var showCancelButton = false
 
-    init(networkService: NetworkService, searchViewModel: SearchViewModel) {
-        self.networkService = networkService
+    init(searchViewModel: SearchViewModel) {
         self.searchViewModel = searchViewModel
-        _homeViewModel  = StateObject(wrappedValue: HomeViewModel(networkService: networkService))
+        _homeViewModel  = StateObject(wrappedValue: HomeViewModel())
     }
 
     var body: some View {
         NavigationStack(path: $router.path) {
             SearchView(
                 searchViewModel: searchViewModel,
-                onMovieSelected: { selectedMovie in }
+                onMovieSelected: { movie in }
             ) {
                 ScrollView {
                     LazyVGrid(
@@ -52,7 +50,7 @@ struct HomeView: View {
                                 }
                         }
                     }
-                    .padding(.horizontal, Consts.Paddings.buttonPadding)
+                    .padding(.horizontal, 16)
                 }
             }.navigationDestination(for: MovieRoute.self) { route in
                 switch route {
@@ -64,9 +62,3 @@ struct HomeView: View {
     }
 }
 
-// TODO: перенести рамеры в константы
-enum Consts {
-    enum Paddings {
-        static let buttonPadding: CGFloat = 16
-    }
-}

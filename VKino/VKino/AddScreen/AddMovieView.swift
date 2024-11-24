@@ -52,7 +52,7 @@ struct AddMovieView: View {
                                     movie.imageData = imageData
                                 }
                             }
-                            // TODO: close sheet
+                            showingSearch = false
                         }) {
                             Spacer()
                         }

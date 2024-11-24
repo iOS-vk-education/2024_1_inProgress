@@ -11,11 +11,8 @@ struct TabBar: View {
     @State private var selectedTab: Tab = .home
     @StateObject private var searchViewModel: SearchViewModel
     
-    private let networkService: NetworkService
-    
-    init(networkService: NetworkService) {
-        self.networkService = networkService
-        _searchViewModel  = StateObject(wrappedValue: SearchViewModel(networkService: networkService))
+    init() {
+        _searchViewModel  = StateObject(wrappedValue: SearchViewModel())
     }
 
     enum Tab {
@@ -27,7 +24,7 @@ struct TabBar: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             // TODO: one more tab with kinopoisk recomendations
-            HomeView(networkService: networkService, searchViewModel: searchViewModel)
+            HomeView(searchViewModel: searchViewModel)
                 .tabItem {
                     Image(systemName: "house.fill")
                         .renderingMode(.template)
@@ -51,9 +48,4 @@ struct TabBar: View {
         .tabViewStyle(.automatic)
         .background(Color.white)
     }
-}
-
-#Preview {
-    let networkService = NetworkService()
-    TabBar(networkService: networkService)
 }

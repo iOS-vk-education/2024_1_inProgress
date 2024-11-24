@@ -9,12 +9,11 @@ import SwiftUI
 
 @main
 struct VKinoApp: App {
-    private let networkService = NetworkService()
     @StateObject private var router = Router()
 
     var body: some Scene {
         WindowGroup {
-            TabBar(networkService: networkService)
+            TabBar()
                 .environmentObject(router)
         }
     }

@@ -28,10 +28,7 @@ class HomeViewModel: ObservableObject {
 
     @Published var savedMovies: [MovieInfo]
 
-    private let networkService: NetworkServiceProtocol
-
-    init(networkService: NetworkServiceProtocol) {
-
+    init() {
         var movies: [MovieInfo] = []
         for index in 1...15 {
             movies.append(
@@ -53,6 +50,5 @@ class HomeViewModel: ObservableObject {
         }
         
         self.savedMovies = movies
-        self.networkService = networkService
     }
 }

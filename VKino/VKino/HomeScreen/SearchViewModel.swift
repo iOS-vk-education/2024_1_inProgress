@@ -15,10 +15,9 @@ class SearchViewModel: ObservableObject {
     private var isLoading = false
     private var currentPage = 1
 
-    private let networkService: NetworkServiceProtocol
+    private let networkService = NetworkService()
 
-    init(networkService: NetworkServiceProtocol) {
-        self.networkService = networkService
+    init() {
         Task {
             await monitorSearchTextChanges()
         }
