@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct VKinoApp: App {
+    @StateObject private var router = Router()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabBar()
+                .environmentObject(router)
         }
     }
 }
