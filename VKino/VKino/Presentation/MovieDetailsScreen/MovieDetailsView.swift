@@ -10,14 +10,12 @@ import Kingfisher
 
 struct MovieDetailsView: View {
     let movie: MovieInfo
-    private let networkService: NetworkServiceProtocol
     
     @Environment(\.presentationMode) var presentationMode
     @State private var showDeleteConfirmation = false
 
-    init(movie: MovieInfo, networkService: NetworkServiceProtocol) {
+    init(movie: MovieInfo) {
         self.movie = movie
-        self.networkService = networkService
     }
 
     var body: some View {
