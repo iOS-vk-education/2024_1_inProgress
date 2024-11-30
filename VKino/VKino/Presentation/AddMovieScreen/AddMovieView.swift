@@ -7,14 +7,8 @@
 
 import SwiftUI
 
-
-struct AddMovieView: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var searchViewModel: SearchViewModel
-    
-    @State private var showingSearch = false
-    @State var showingImagePicker: Bool = false
-    @State private var movie = MovieEditable(
+class AddMovieViewModel: ObservableObject {
+    @Published var movie = MovieEditable(
         id: 0,
         title: "",
         originalTitle: "",
@@ -23,47 +17,35 @@ struct AddMovieView: View {
         description: "",
         author: "",
         imageData: nil,
-        actors: ""
+        actors: "",
+        rating: ""
     )
     
-    init(searchViewModel: SearchViewModel) {
-        self.searchViewModel = searchViewModel
-    }
+    @Published var showingImagePicker = false
+    @Published var showingSearch = false
+    @Published var showDeleteConfirmation = false
+    @Published var showTitleEmptyAlert = false
+    @Published var showInvalidRatingAlert = false
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                Button("Search on Kinopoisk") {
-                    showingSearch = true
-                }
-                .sheet(isPresented: $showingSearch) {
-                    SearchView(
-                        searchViewModel: searchViewModel,
-                        onMovieSelected: { selectedMovie in
-
-                            movie.title = selectedMovie.name ?? ""
-                            movie.description = selectedMovie.description ?? ""
-                            movie.duration = String(selectedMovie.movieLength ?? 0) + " мин."
-                            movie.category = selectedMovie.genres?.compactMap({$0.name}).joined(separator: ", ") ?? ""
-                            movie.originalTitle = selectedMovie.alternativeName ?? ""
-
-                            if let posterUrl = selectedMovie.poster?.url {
-                                downloadImage(from: posterUrl) { imageData in
-                                    movie.imageData = imageData
-                                }
-                            }
-                            showingSearch = false
-                        }) {
-                            Spacer()
-                        }
-                }
-                MovieImagePreviewView(imageData: $movie.imageData, showingImagePicker: $showingImagePicker)
-                MovieFormView(movie: $movie)
-            }
+    func saveMovie() {
+        if movie.title.isEmpty {
+            showTitleEmptyAlert = true
+        }
+        else if !isValidRating(movie.rating) {
+            showInvalidRatingAlert = true
+        }
+        else {
+            // TODO: Реализация сохранения
+            print("Movie saved")
         }
     }
 
-    private func downloadImage(from urlString: String, completion: @escaping (Data?) -> Void) {
+    func deleteMovie() {
+        // TODO: Реализация удаления
+        print("Movie deleted")
+    }
+
+    func downloadImage(from urlString: String, completion: @escaping (Data?) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(nil)
             return
@@ -74,5 +56,106 @@ struct AddMovieView: View {
                 completion(data)
             }
         }.resume()
+    }
+
+    private func isValidRating(_ rating: String) -> Bool {
+        if let ratingValueInt = Int(rating) {
+            if ratingValueInt >= 0 && ratingValueInt <= 10 {
+                return true
+            }
+        }
+        else if let ratingValue = Double(rating) {
+            let formattedRating = String(format: "%.1f", ratingValue)
+            if ratingValue >= 0 && ratingValue <= 10 && rating == formattedRating {
+                return true
+            }
+        }
+        
+        return false
+    }
+
+}
+
+struct AddMovieView: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var searchViewModel: SearchViewModel
+    @StateObject private var viewModel = AddMovieViewModel()
+
+    init(searchViewModel: SearchViewModel) {
+        self.searchViewModel = searchViewModel
+    }
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 16) {
+                    MovieImagePreviewView(imageData: $viewModel.movie.imageData, showingImagePicker: $viewModel.showingImagePicker)
+                    MovieFormView(movie: $viewModel.movie)
+                }
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.showingSearch = true
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.title2)
+                    }
+                    Button(action: {
+                        viewModel.saveMovie()
+                        dismiss()
+                    }) {
+                        Image(systemName: "square.and.arrow.down")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                    }
+                }
+            }
+            .sheet(isPresented: $viewModel.showingSearch) {
+                SearchView(
+                    searchViewModel: searchViewModel,
+                    onMovieSelected: { selectedMovie in
+                        viewModel.movie.title = selectedMovie.name ?? ""
+                        viewModel.movie.description = selectedMovie.description ?? ""
+                        viewModel.movie.duration = String(selectedMovie.movieLength ?? 0) + " мин."
+                        viewModel.movie.category = selectedMovie.genres?.compactMap({ $0.name }).joined(separator: ", ") ?? ""
+                        viewModel.movie.originalTitle = selectedMovie.alternativeName ?? ""
+                        viewModel.movie.rating = String(format: "%.1f", selectedMovie.rating?.kp ?? 0)
+
+                        if let posterUrl = selectedMovie.poster?.url {
+                            viewModel.downloadImage(from: posterUrl) { imageData in
+                                viewModel.movie.imageData = imageData
+                            }
+                        }
+                        viewModel.showingSearch = false
+                    }) {
+                    Spacer()
+                }
+            }
+            .alert("Error", isPresented: $viewModel.showTitleEmptyAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please fill in the movie title.")
+            }
+            .alert("Invalid Rating", isPresented: $viewModel.showInvalidRatingAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please enter a valid rating between 0 and 10.")
+            }
+            .alert("Delete Movie", isPresented: $viewModel.showDeleteConfirmation) {
+                deleteAlertActions
+            } message: {
+                Text("Are you sure you want to delete this movie?")
+            }
+        }
+    }
+
+    private var deleteAlertActions: some View {
+        Group {
+            Button("Delete", role: .destructive) {
+                viewModel.deleteMovie()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
 }
