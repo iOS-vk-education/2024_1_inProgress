@@ -7,72 +7,84 @@
 
 import SwiftUI
 
-
 struct AddMovieView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var searchViewModel: SearchViewModel
-    
-    @State private var showingSearch = false
-    @State var showingImagePicker: Bool = false
-    @State private var movie = MovieEditable(
-        id: 0,
-        title: "",
-        originalTitle: "",
-        category: "",
-        duration: "",
-        description: "",
-        author: "",
-        imageData: nil,
-        actors: ""
-    )
-    
+    @StateObject private var viewModel = AddMovieViewModel()
+
     init(searchViewModel: SearchViewModel) {
         self.searchViewModel = searchViewModel
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                Button("Search on Kinopoisk") {
-                    showingSearch = true
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 16) {
+                    MovieImagePreviewView(
+                        imageData: $viewModel.movie.imageData,
+                        showingImagePicker: $viewModel.showingImagePicker
+                    )
+                    MovieFormView(movie: $viewModel.movie)
                 }
-                .sheet(isPresented: $showingSearch) {
-                    SearchView(
-                        searchViewModel: searchViewModel,
-                        onMovieSelected: { selectedMovie in
-
-                            movie.title = selectedMovie.name ?? ""
-                            movie.description = selectedMovie.description ?? ""
-                            movie.duration = String(selectedMovie.movieLength ?? 0) + " мин."
-                            movie.category = selectedMovie.genres?.compactMap({$0.name}).joined(separator: ", ") ?? ""
-                            movie.originalTitle = selectedMovie.alternativeName ?? ""
-
-                            if let posterUrl = selectedMovie.poster?.url {
-                                downloadImage(from: posterUrl) { imageData in
-                                    movie.imageData = imageData
-                                }
-                            }
-                            showingSearch = false
-                        }) {
-                            Spacer()
-                        }
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.setShowingSearch(isShowing: true)
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.title2)
+                    }
+                    Button(action: {
+                        viewModel.saveMovie()
+                        dismiss()
+                    }) {
+                        Image(systemName: "square.and.arrow.down")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                    }
                 }
-                MovieImagePreviewView(imageData: $movie.imageData, showingImagePicker: $showingImagePicker)
-                MovieFormView(movie: $movie)
+            }
+            .sheet(isPresented: $viewModel.shouldShowSearchSheet) {
+                SearchView(
+                    searchViewModel: searchViewModel,
+                    onMovieSelected: { selectedMovie in
+                        viewModel.updateMovie(newMovie: selectedMovie)
+                        viewModel.setShowingSearch(isShowing: false)
+                    }) {
+                    Spacer()
+                }
+            }
+            .alert("Error", isPresented: $viewModel.showEmptyTitleAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please fill in the movie title.")
+            }
+            .alert("Error", isPresented: $viewModel.showEmptyImageAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please upload the movie image.")
+            }
+            .alert("Invalid Rating", isPresented: $viewModel.showInvalidRatingAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please enter a valid rating between 0 and 10.")
+            }
+            .alert("Delete Movie", isPresented: $viewModel.showDeleteConfirmation) {
+                deleteAlertActions
+            } message: {
+                Text("Are you sure you want to delete this movie?")
             }
         }
     }
 
-    private func downloadImage(from urlString: String, completion: @escaping (Data?) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(nil)
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            DispatchQueue.main.async {
-                completion(data)
+    private var deleteAlertActions: some View {
+        Group {
+            Button("Delete", role: .destructive) {
+                viewModel.deleteMovie()
             }
-        }.resume()
+            Button("Cancel", role: .cancel) {}
+        }
     }
+
 }

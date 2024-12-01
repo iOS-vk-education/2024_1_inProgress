@@ -48,6 +48,7 @@ struct MovieEditable {
     var author: String
     var imageData: Data?
     var actors: String
+    var rating: String
 }
 
 struct Poster: Decodable {

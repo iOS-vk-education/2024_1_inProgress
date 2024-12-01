@@ -35,8 +35,5 @@ struct MovieImagePreviewView: View {
             ImagePicker(imageData: $imageData)
         }
     }
-}
 
-#Preview {
-    MovieImagePreviewView(imageData: .constant(nil), showingImagePicker: .constant(false))
 }
