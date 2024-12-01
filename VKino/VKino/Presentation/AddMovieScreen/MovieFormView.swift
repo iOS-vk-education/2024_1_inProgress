@@ -38,7 +38,12 @@ struct MovieFormView: View {
         .padding()
     }
 
-    private func inputField(placeholder: String, text: Binding<String>, systemImage: String, iconColor: Color = .gray) -> some View {
+    private func inputField(
+        placeholder: String,
+        text: Binding<String>,
+        systemImage: String,
+        iconColor: Color = .gray
+    ) -> some View {
         HStack(alignment: .center, spacing: 8) {
             Image(systemName: systemImage)
                 .frame(width: 24, height: 24)
