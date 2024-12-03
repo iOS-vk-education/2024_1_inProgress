@@ -15,6 +15,8 @@ struct Dimensions {
         static let SMALL: CGFloat = 12.0
         static let NORMAL: CGFloat = 16.0
         static let LARGE: CGFloat = 20.0
+        
+        static let ICON_SIZE: CGFloat = 24.0
     }
 
     struct CornerRadius {
