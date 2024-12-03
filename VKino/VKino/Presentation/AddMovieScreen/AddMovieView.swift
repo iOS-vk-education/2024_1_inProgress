@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-// вынесла всё, вдруг придется юзать еще где-то
-private enum Alerts {
-    static let ERROR_TITLE: String = "Error"
-    static let EMPTY_TITLE_MESSAGE: String = "Please fill in the movie title."
-    static let EMPTY_IMAGE_MESSAGE: String = "Please upload the movie image."
-    static let INVALID_RATING_MESSAGE: String = "Please enter a valid rating between 0 and 10."
-    static let DELETE_CONFIRMATION_TITLE: String = "Delete Movie"
-    static let DELETE_CONFIRMATION_MESSAGE: String = "Are you sure you want to delete this movie?"
-    static let DELETE_BUTTON_TITLE: String = "Delete"
-    static let CANCEL_BUTTON_TITLE: String = "Cancel"
-    static let OK_BUTTON_TITLE: String = "OK"
-}
-
 struct AddMovieView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var searchViewModel: SearchViewModel
@@ -54,7 +41,7 @@ struct AddMovieView: View {
                     }) {
                         Image(systemName: "square.and.arrow.down")
                             .font(.title2)
-                            .foregroundColor(Colors.primaryButton)
+                            .foregroundColor(Colors.PRIMARY_BUTTON_COLOR)
                     }
                 }
             }
@@ -101,4 +88,16 @@ struct AddMovieView: View {
         }
     }
 
+}
+
+private enum Alerts {
+    static let ERROR_TITLE: String = "Error"
+    static let EMPTY_TITLE_MESSAGE: String = "Please fill in the movie title."
+    static let EMPTY_IMAGE_MESSAGE: String = "Please upload the movie image."
+    static let INVALID_RATING_MESSAGE: String = "Please enter a valid rating between 0 and 10."
+    static let DELETE_CONFIRMATION_TITLE: String = "Delete Movie"
+    static let DELETE_CONFIRMATION_MESSAGE: String = "Are you sure you want to delete this movie?"
+    static let DELETE_BUTTON_TITLE: String = "Delete"
+    static let CANCEL_BUTTON_TITLE: String = "Cancel"
+    static let OK_BUTTON_TITLE: String = "OK"
 }

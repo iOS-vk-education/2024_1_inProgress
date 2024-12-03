@@ -42,7 +42,7 @@ struct MovieFormView: View {
         placeholder: String,
         text: Binding<String>,
         systemImage: String,
-        iconColor: Color = Colors.icon 
+        iconColor: Color = Colors.INPUT_FIELD_ICON_COLOR 
     ) -> some View {
         HStack(alignment: .center, spacing: Dimensions.Spacing.X_SMALL) {
             Image(systemName: systemImage)
@@ -54,7 +54,7 @@ struct MovieFormView: View {
                     .padding(Dimensions.Spacing.X_X_SMALL)
                     .background(
                         RoundedRectangle(cornerRadius: Dimensions.CornerRadius.SMALL)
-                            .stroke(Colors.border)
+                            .stroke(Colors.BORDER_COLOR)
                     )
             }
         }
