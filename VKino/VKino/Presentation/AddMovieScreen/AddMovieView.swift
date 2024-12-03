@@ -7,6 +7,19 @@
 
 import SwiftUI
 
+// вынесла всё, вдруг придется юзать еще где-то
+private enum Alerts {
+    static let ERROR_TITLE: String = "Error"
+    static let EMPTY_TITLE_MESSAGE: String = "Please fill in the movie title."
+    static let EMPTY_IMAGE_MESSAGE: String = "Please upload the movie image."
+    static let INVALID_RATING_MESSAGE: String = "Please enter a valid rating between 0 and 10."
+    static let DELETE_CONFIRMATION_TITLE: String = "Delete Movie"
+    static let DELETE_CONFIRMATION_MESSAGE: String = "Are you sure you want to delete this movie?"
+    static let DELETE_BUTTON_TITLE: String = "Delete"
+    static let CANCEL_BUTTON_TITLE: String = "Cancel"
+    static let OK_BUTTON_TITLE: String = "OK"
+}
+
 struct AddMovieView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var searchViewModel: SearchViewModel
@@ -19,7 +32,7 @@ struct AddMovieView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: Dimensions.Spacing.NORMAL) {
                     MovieImagePreviewView(
                         imageData: $viewModel.movie.imageData,
                         showingImagePicker: $viewModel.showingImagePicker
@@ -41,7 +54,7 @@ struct AddMovieView: View {
                     }) {
                         Image(systemName: "square.and.arrow.down")
                             .font(.title2)
-                            .foregroundColor(.blue)
+                            .foregroundColor(Colors.primaryButton)
                     }
                 }
             }
@@ -55,35 +68,36 @@ struct AddMovieView: View {
                     Spacer()
                 }
             }
-            .alert("Error", isPresented: $viewModel.showEmptyTitleAlert) {
-                Button("OK", role: .cancel) { }
+            .alert(Alerts.ERROR_TITLE, isPresented: $viewModel.showEmptyTitleAlert) {
+                Button(Alerts.OK_BUTTON_TITLE, role: .cancel) { }
             } message: {
-                Text("Please fill in the movie title.")
+                Text(Alerts.EMPTY_TITLE_MESSAGE)
             }
-            .alert("Error", isPresented: $viewModel.showEmptyImageAlert) {
-                Button("OK", role: .cancel) { }
+            .alert(Alerts.ERROR_TITLE, isPresented: $viewModel.showEmptyImageAlert) {
+                Button(Alerts.OK_BUTTON_TITLE, role: .cancel) { }
             } message: {
-                Text("Please upload the movie image.")
+                Text(Alerts.EMPTY_IMAGE_MESSAGE)
             }
-            .alert("Invalid Rating", isPresented: $viewModel.showInvalidRatingAlert) {
-                Button("OK", role: .cancel) { }
+            .alert(Alerts.ERROR_TITLE, isPresented: $viewModel.showInvalidRatingAlert) {
+                Button(Alerts.OK_BUTTON_TITLE, role: .cancel) { }
             } message: {
-                Text("Please enter a valid rating between 0 and 10.")
+                Text(Alerts.INVALID_RATING_MESSAGE)
             }
-            .alert("Delete Movie", isPresented: $viewModel.showDeleteConfirmation) {
+            .alert(Alerts.DELETE_CONFIRMATION_TITLE, isPresented: $viewModel.showDeleteConfirmation) {
                 deleteAlertActions
             } message: {
-                Text("Are you sure you want to delete this movie?")
+                Text(Alerts.DELETE_CONFIRMATION_MESSAGE)
             }
+
         }
     }
 
     private var deleteAlertActions: some View {
         Group {
-            Button("Delete", role: .destructive) {
+            Button(Alerts.DELETE_BUTTON_TITLE, role: .destructive) {
                 viewModel.deleteMovie()
             }
-            Button("Cancel", role: .cancel) {}
+            Button(Alerts.CANCEL_BUTTON_TITLE, role: .cancel) {}
         }
     }
 
