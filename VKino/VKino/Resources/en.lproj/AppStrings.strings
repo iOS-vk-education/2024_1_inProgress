@@ -1,0 +1,19 @@
+/* 
+  AppStrings.strings
+  VKino
+
+  Created by Aleksandr Kaplenkov on 03.12.2024.
+  
+*/
+
+"movie_details_title" = "Movie Details";
+"delete_button_label" = "Delete";
+"edit_button_label" = "Edit";
+"delete_alert_title" = "Delete Movie";
+"delete_alert_message" = "Are you sure you want to delete this movie?";
+"cancel_button_label" = "Cancel";
+"movie_details_no_title" = "No Title";
+"movie_details_no_description" = "No description available.";
+"movie_details_time_units" = "min.";
+"movie_details_rating_format" = "%.1f";
+"movie_details_votes" = "votes";
