@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct AddMovieView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var movieRepository: MovieRepository
+    @EnvironmentObject var router: Router
+    
     @ObservedObject private var searchViewModel: SearchViewModel
-    @StateObject private var viewModel = AddMovieViewModel()
+    @StateObject private var viewModel: AddMovieViewModel
 
-    init(searchViewModel: SearchViewModel) {
+    init(searchViewModel: SearchViewModel, movie: Movie) {
         self.searchViewModel = searchViewModel
+        _viewModel = StateObject(wrappedValue: AddMovieViewModel(movie: movie))
     }
 
     var body: some View {
@@ -36,8 +40,7 @@ struct AddMovieView: View {
                             .font(.title2)
                     }
                     Button(action: {
-                        viewModel.saveMovie()
-                        dismiss()
+                        saveMovie()
                     }) {
                         Image(systemName: "square.and.arrow.down")
                             .font(.title2)
@@ -76,19 +79,30 @@ struct AddMovieView: View {
             } message: {
                 Text(Alerts.DELETE_CONFIRMATION_MESSAGE)
             }
-
+        }.onAppear {
+            viewModel.setMovieRepository(repository: movieRepository)
         }
     }
 
     private var deleteAlertActions: some View {
         Group {
             Button(Alerts.DELETE_BUTTON_TITLE, role: .destructive) {
-                viewModel.deleteMovie()
+                deleteMovie()
             }
             Button(Alerts.CANCEL_BUTTON_TITLE, role: .cancel) {}
         }
     }
 
+}
+
+private extension AddMovieView {
+    func deleteMovie() {
+        viewModel.deleteMovie()
+    }
+
+    func saveMovie() {
+        viewModel.saveMovie()
+    }
 }
 
 private enum Alerts {

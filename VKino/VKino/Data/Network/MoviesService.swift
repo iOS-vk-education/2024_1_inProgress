@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct APIConstants {
-    static let apiKey = "1JCWXT8-MDTMG3P-QA53W8Y-347C1D0"
+enum APIConstants {
+    static let apiKey = "JKPWKHV-X3R4ASF-H5BP4CG-WKE2RPD"
 }
 
 protocol MovieServiceProtocol {

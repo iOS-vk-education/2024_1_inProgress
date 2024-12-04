@@ -9,14 +9,13 @@ import SwiftUI
 import Kingfisher
 
 struct MovieDetailsView: View {
-    let movie: Movie
-    
     @StateObject private var viewModel: MovieDetailsViewModel
+    
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var movieRepository: MovieRepository
 
     init(movie: Movie) {
-        self.movie = movie
-        _viewModel = StateObject(wrappedValue: MovieDetailsViewModel())
+        _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
     }
 
     var body: some View {
@@ -24,13 +23,13 @@ struct MovieDetailsView: View {
             VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
                 movieHeaderView
                 movieDetailsView
-                if let votes = movie.votes {
-                    ratingAndVotesView(rating: movie.rating, votes: votes)
+                if let votes = viewModel.movie.votes {
+                    ratingAndVotesView(rating: viewModel.movie.rating, votes: votes)
                 }
                 Spacer()
             }
         }
-        .navigationTitle(movie.title)
+        .navigationTitle(viewModel.movie.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             deleteButton
@@ -40,13 +39,16 @@ struct MovieDetailsView: View {
         } message: {
             Text(getString("delete_alert_message"))
         }
+        .onAppear {
+            viewModel.setMovieRepository(repository: movieRepository)
+        }
     }
 }
 
 private extension MovieDetailsView {
     var movieHeaderView: some View {
         ZStack(alignment: .bottomLeading) {
-            KFImage(URL(string: movie.imageUrl))
+            KFImage(URL(string: viewModel.movie.imageUrl))
                 .resizable()
                 .scaledToFill()
                 .frame(height: Const.Sizes.POSTER_HEIGHT)
@@ -59,7 +61,7 @@ private extension MovieDetailsView {
             )
             .frame(height: Const.Sizes.POSTER_HEIGHT)
 
-            Text(movie.title)
+            Text(viewModel.movie.title)
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
@@ -69,19 +71,19 @@ private extension MovieDetailsView {
 
     var movieDetailsView: some View {
         VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
-            if !movie.category.isEmpty {
-                detailLabel(text: movie.category, systemImage: "info.circle")
+            if !viewModel.movie.category.isEmpty {
+                detailLabel(text: viewModel.movie.category, systemImage: "info.circle")
             }
 
-            if !movie.duration.isEmpty {
-                detailLabel(text: movie.duration, systemImage: "clock")
+            if !viewModel.movie.duration.isEmpty {
+                detailLabel(text: viewModel.movie.duration, systemImage: "clock")
             }
 
-            if !movie.year.isEmpty {
-                detailLabel(text: movie.year, systemImage: "calendar")
+            if !viewModel.movie.year.isEmpty {
+                detailLabel(text: viewModel.movie.year, systemImage: "calendar")
             }
 
-            detailLabel(text: movie.description, systemImage: "line.3.horizontal")
+            detailLabel(text: viewModel.movie.description, systemImage: "line.3.horizontal")
         }
         .padding(.horizontal)
     }
@@ -147,7 +149,7 @@ private extension MovieDetailsView {
 
 private extension MovieDetailsView {
     func deleteMovie() {
-        // TODO: Make call to MovieService to delete it from Firebase
+        viewModel.deleteMovie()
         presentationMode.wrappedValue.dismiss()
     }
 }

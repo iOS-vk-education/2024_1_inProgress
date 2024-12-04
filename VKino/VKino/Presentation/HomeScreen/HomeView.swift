@@ -10,15 +10,16 @@ import Kingfisher
 
 struct HomeView: View {
     @ObservedObject private var searchViewModel: SearchViewModel
+    @ObservedObject private var viewModel: HomeViewModel
 
     @EnvironmentObject var router: Router
+    @EnvironmentObject var movieRepository: MovieRepository
 
-    @StateObject private var homeViewModel: HomeViewModel
     @State private var showCancelButton = false
 
-    init(searchViewModel: SearchViewModel) {
+    init(searchViewModel: SearchViewModel, homeViewModel: HomeViewModel) {
         self.searchViewModel = searchViewModel
-        _homeViewModel  = StateObject(wrappedValue: HomeViewModel())
+        self.viewModel = homeViewModel
     }
 
     var body: some View {
@@ -30,35 +31,58 @@ struct HomeView: View {
                 ScrollView {
                     LazyVGrid(
                         columns: [
-                            GridItem(.flexible(), spacing: 8),
-                            GridItem(.flexible(), spacing: 8)
+                            GridItem(.flexible(), spacing: Dimensions.Spacing.X_SMALL),
+                            GridItem(.flexible(), spacing: Dimensions.Spacing.X_SMALL)
                         ],
-                        spacing: 16
+                        spacing: Dimensions.Spacing.NORMAL
                     ) {
-                        ForEach(homeViewModel.savedMovies, id: \.id) { movie in
-                            KFImage(URL(string: movie.poster?.url ?? ""))
-                                .resizable()
-                                .placeholder {
-                                    ProgressView()
-                                        .frame(width: 171, height: 245)
-                                }
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 171, height: 245)
-                                .cornerRadius(6)
-                                .onTapGesture {
-                                    router.path.append(.movieDetail(movie: movie))
-                                }
+                        ForEach(viewModel.movies, id: \.id) { movie in
+                            moviePreview(movie: movie) {
+                                router.path.append(.movieDetail(movie: movie))
+                            }
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, Dimensions.Spacing.NORMAL)
                 }
             }.navigationDestination(for: MovieRoute.self) { route in
                 switch route {
-                case .movieDetail(let movieInfo):
-                    MovieDetailsView(movie: Movie.from(movieInfo))
+                case .movieDetail(let movie):
+                    MovieDetailsView(movie: movie)
                 }
             }
+        }.onAppear {
+            viewModel.setMovieRepository(repository: movieRepository)
         }
     }
 }
 
+private extension HomeView {
+    func moviePreview(movie: Movie, onTapGesture: @escaping () -> Void) -> some View {
+        KFImage(URL(string: movie.imageUrl))
+            .resizable()
+            .placeholder {
+                ProgressView()
+                    .frame(
+                        width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
+                        height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
+                    )
+            }
+            .aspectRatio(contentMode: .fill)
+            .frame(
+                width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
+                height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
+            )
+            .cornerRadius(Dimensions.CornerRadius.NORMAL)
+            .onTapGesture {
+                onTapGesture()
+            }
+    }
+}
+
+
+private enum Constants {
+    enum HomeViewDesignSystem {
+        static let MOVIE_PREVIEW_WIDTH: CGFloat = 171
+        static let MOVIE_PREVIEW_HEIGHT: CGFloat = 245
+    }
+}
