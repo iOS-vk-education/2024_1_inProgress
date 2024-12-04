@@ -20,6 +20,10 @@ class MovieDetailsViewModel: ObservableObject {
         }
     }
     
+    func setDeletionConfirmation(status: Bool) {
+        showDeleteConfirmation = status
+    }
+    
     func onEditClicked() {
         // TODO: implement bavigation to edit screen
     }

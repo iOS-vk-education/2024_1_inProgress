@@ -114,7 +114,7 @@ private extension MovieDetailsView {
             }
             
             Button(role: .destructive) {
-                viewModel.showDeleteConfirmation = true
+                viewModel.setDeletionConfirmation(status: true)
             } label: {
                 Image(systemName: "trash")
                     .foregroundColor(.red)
