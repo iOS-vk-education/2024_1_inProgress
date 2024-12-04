@@ -38,17 +38,41 @@ struct MovieInfo: Decodable, Equatable, Hashable {
     }
 }
 
-struct MovieEditable {
-    var id: Int
+//struct Movie {
+//    var id: UUID
+//    var title: String
+//    var originalTitle: String
+//    var category: String
+//    var duration: String
+//    var description: String
+//    var author: String
+//    var imageData: Data?
+//    var actors: String
+//    var rating: String
+//}
+
+struct Movie: Decodable, Equatable, Hashable {
+    var id: UUID
     var title: String
     var originalTitle: String
     var category: String
+    var year: String
     var duration: String
     var description: String
     var author: String
+    var imageUrl: String
     var imageData: Data?
     var actors: String
     var rating: String
+    var votes: Votes?
+    
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 struct Poster: Decodable {

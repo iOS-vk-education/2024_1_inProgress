@@ -54,8 +54,8 @@ struct HomeView: View {
                 }
             }.navigationDestination(for: MovieRoute.self) { route in
                 switch route {
-                case .movieDetail(let movie):
-                    MovieDetailsView(movie: movie)
+                case .movieDetail(let movieInfo):
+                    MovieDetailsView(movie: Movie.from(movieInfo))
                 }
             }
         }

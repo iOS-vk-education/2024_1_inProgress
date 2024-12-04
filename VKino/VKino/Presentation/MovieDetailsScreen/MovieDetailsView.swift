@@ -9,12 +9,12 @@ import SwiftUI
 import Kingfisher
 
 struct MovieDetailsView: View {
-    let movie: MovieInfo
+    let movie: Movie
     
     @StateObject private var viewModel: MovieDetailsViewModel
     @Environment(\.presentationMode) var presentationMode
 
-    init(movie: MovieInfo) {
+    init(movie: Movie) {
         self.movie = movie
         _viewModel = StateObject(wrappedValue: MovieDetailsViewModel())
     }
@@ -24,21 +24,21 @@ struct MovieDetailsView: View {
             VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
                 movieHeaderView
                 movieDetailsView
-                if let rating = movie.rating, let votes = movie.votes {
-                    ratingAndVotesView(rating: rating, votes: votes)
+                if let votes = movie.votes {
+                    ratingAndVotesView(rating: movie.rating, votes: votes)
                 }
                 Spacer()
             }
         }
-        .navigationTitle(movie.name ?? getString(name: "movie_details_title"))//"Movie Details")
+        .navigationTitle(movie.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             deleteButton
         }
-        .alert(getString(name: "delete_alert_title"), isPresented: $viewModel.showDeleteConfirmation) {
+        .alert(getString("delete_alert_title"), isPresented: $viewModel.showDeleteConfirmation) {
             deleteAlertActions
         } message: {
-            Text(getString(name: "delete_alert_message"))
+            Text(getString("delete_alert_message"))
         }
     }
 }
@@ -46,7 +46,7 @@ struct MovieDetailsView: View {
 private extension MovieDetailsView {
     var movieHeaderView: some View {
         ZStack(alignment: .bottomLeading) {
-            KFImage(URL(string: movie.poster?.url ?? ""))
+            KFImage(URL(string: movie.imageUrl))
                 .resizable()
                 .scaledToFill()
                 .frame(height: Const.Sizes.POSTER_HEIGHT)
@@ -59,7 +59,7 @@ private extension MovieDetailsView {
             )
             .frame(height: Const.Sizes.POSTER_HEIGHT)
 
-            Text(movie.name ?? movie.alternativeName ?? getString(name: "movie_details_no_title"))
+            Text(movie.title)
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
@@ -69,33 +69,30 @@ private extension MovieDetailsView {
 
     var movieDetailsView: some View {
         VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
-            if let genres = movie.genres, !genres.isEmpty {
-                detailLabel(text: genres.map { $0.name }.joined(separator: ", "), systemImage: "info.circle")
+            if !movie.category.isEmpty {
+                detailLabel(text: movie.category, systemImage: "info.circle")
             }
-            
-            if let movieLength = movie.movieLength {
-                detailLabel(text: "\(movieLength) " + getString(name: "movie_details_time_units"), systemImage: "clock")
+
+            if !movie.duration.isEmpty {
+                detailLabel(text: movie.duration, systemImage: "clock")
             }
-            
-            if let year = movie.year {
-                detailLabel(text: "\(year)", systemImage: "calendar")
+
+            if !movie.year.isEmpty {
+                detailLabel(text: movie.year, systemImage: "calendar")
             }
-            
-            detailLabel(
-                text: movie.description ?? movie.shortDescription ?? getString(name: "movie_details_no_description"),
-                systemImage: "line.3.horizontal"
-            )
+
+            detailLabel(text: movie.description, systemImage: "line.3.horizontal")
         }
         .padding(.horizontal)
     }
 
-    func ratingAndVotesView(rating: Rating, votes: Votes) -> some View {
+    func ratingAndVotesView(rating: String, votes: Votes) -> some View {
         HStack(spacing: Dimensions.Spacing.NORMAL) {
-            Label("\(String(format: getString(name: "movie_details_rating_format"), rating.kp ?? 0))", systemImage: "star.fill")
+            Label(rating, systemImage: "star.fill")
                 .font(.headline)
                 .foregroundColor(.yellow)
 
-            Text("\(votes.kp) " + getString(name: "movie_details_votes"))
+            Text("\(votes.kp) " + getString("movie_details_votes"))
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -124,10 +121,10 @@ private extension MovieDetailsView {
 
     var deleteAlertActions: some View {
         Group {
-            Button(getString(name: "delete_button_label"), role: .destructive) {
+            Button(getString("delete_button_label"), role: .destructive) {
                 deleteMovie()
             }
-            Button(getString(name: "cancel_button_label"), role: .cancel) {}
+            Button(getString("cancel_button_label"), role: .cancel) {}
         }
     }
 }
@@ -153,10 +150,6 @@ private extension MovieDetailsView {
         // TODO: Make call to MovieService to delete it from Firebase
         presentationMode.wrappedValue.dismiss()
     }
-}
-
-private func getString(name: String) -> String {
-    return NSLocalizedString(name, tableName: "AppStrings", comment: "")
 }
 
 private enum Const {

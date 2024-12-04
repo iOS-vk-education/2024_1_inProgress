@@ -49,7 +49,8 @@ struct AddMovieView: View {
                 SearchView(
                     searchViewModel: searchViewModel,
                     onMovieSelected: { selectedMovie in
-                        viewModel.updateMovie(newMovie: selectedMovie)
+                        viewModel.updateMovie(newMovieInfo: selectedMovie)
+
                         viewModel.setShowingSearch(isShowing: false)
                     }) {
                     Spacer()

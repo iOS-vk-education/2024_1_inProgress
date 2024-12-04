@@ -8,18 +8,7 @@
 import SwiftUI
 
 class AddMovieViewModel: ObservableObject {
-    @Published var movie = MovieEditable(
-        id: 0,
-        title: "",
-        originalTitle: "",
-        category: "",
-        duration: "",
-        description: "",
-        author: "",
-        imageData: nil,
-        actors: "",
-        rating: ""
-    )
+    @Published var movie = Movie.emptyMovie()
 
     @Published var showingImagePicker = false
     @Published var shouldShowSearchSheet = false
@@ -27,19 +16,12 @@ class AddMovieViewModel: ObservableObject {
     @Published var showEmptyTitleAlert = false
     @Published var showInvalidRatingAlert = false
     @Published var showEmptyImageAlert = false
-    
-    func updateMovie(newMovie: MovieInfo) {
-        movie.title = newMovie.name ?? ""
-        movie.description = newMovie.description ?? ""
-        movie.duration = String(newMovie.movieLength ?? 0) + " мин."
-        movie.category = newMovie.genres?.compactMap({ $0.name }).joined(separator: ", ") ?? ""
-        movie.originalTitle = newMovie.alternativeName ?? ""
-        movie.rating = String(format: "%.1f", newMovie.rating?.kp ?? 0)
 
-        if let posterUrl = newMovie.poster?.url {
-            downloadImage(from: posterUrl) { imageData in
-                self.movie.imageData = imageData
-            }
+    func updateMovie(newMovieInfo: MovieInfo) {
+        movie = Movie.from(newMovieInfo)
+
+        downloadImage(from: movie.imageUrl) { imageData in
+            self.movie.imageData = imageData
         }
     }
 
