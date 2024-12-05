@@ -8,18 +8,9 @@
 import SwiftUI
 
 class AddMovieViewModel: ObservableObject {
-    @Published var movie = MovieEditable(
-        id: 0,
-        title: "",
-        originalTitle: "",
-        category: "",
-        duration: "",
-        description: "",
-        author: "",
-        imageData: nil,
-        actors: "",
-        rating: ""
-    )
+    private var movieRepository: MovieRepository? = nil
+
+    @Published var movie: Movie
 
     @Published var showingImagePicker = false
     @Published var shouldShowSearchSheet = false
@@ -27,19 +18,20 @@ class AddMovieViewModel: ObservableObject {
     @Published var showEmptyTitleAlert = false
     @Published var showInvalidRatingAlert = false
     @Published var showEmptyImageAlert = false
-    
-    func updateMovie(newMovie: MovieInfo) {
-        movie.title = newMovie.name ?? ""
-        movie.description = newMovie.description ?? ""
-        movie.duration = String(newMovie.movieLength ?? 0) + " мин."
-        movie.category = newMovie.genres?.compactMap({ $0.name }).joined(separator: ", ") ?? ""
-        movie.originalTitle = newMovie.alternativeName ?? ""
-        movie.rating = String(format: "%.1f", newMovie.rating?.kp ?? 0)
 
-        if let posterUrl = newMovie.poster?.url {
-            downloadImage(from: posterUrl) { imageData in
-                self.movie.imageData = imageData
-            }
+    init(movie newMovie: Movie) {
+        self.movie = newMovie
+    }
+    
+    func setMovieRepository(repository: MovieRepository) {
+        self.movieRepository = repository
+    }
+
+    func updateMovie(newMovieInfo: MovieInfo) {
+        movie = Movie.from(newMovieInfo)
+
+        downloadImage(from: movie.imageUrl) { imageData in
+            self.movie.imageData = imageData
         }
     }
 
@@ -52,18 +44,30 @@ class AddMovieViewModel: ObservableObject {
             showInvalidRatingAlert = true
         }
         else {
-            // TODO: Реализация сохранения
-            print("Movie saved")
+            DispatchQueue.main.async {                self.movieRepository?.addMovie(self.movie)
+                self.clearState()
+            }
         }
     }
 
     func deleteMovie() {
-        // TODO: Реализация удаления
-        print("Movie deleted")
+        DispatchQueue.main.async {
+            self.movieRepository?.removeMovie(by: self.movie.id)
+        }
     }
 
     func setShowingSearch(isShowing: Bool) {
         shouldShowSearchSheet = isShowing
+    }
+    
+    private func clearState() {
+        movie = Movie.emptyMovie()
+        showingImagePicker = false
+        shouldShowSearchSheet = false
+        showDeleteConfirmation = false
+        showEmptyTitleAlert = false
+        showInvalidRatingAlert = false
+        showEmptyImageAlert = false
     }
 
     private func downloadImage(from urlString: String, completion: @escaping (Data?) -> Void) {

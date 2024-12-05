@@ -14,6 +14,6 @@
 "cancel_button_label" = "Cancel";
 "movie_details_no_title" = "No Title";
 "movie_details_no_description" = "No description available.";
-"movie_details_time_units" = "min.";
+"movie_details_time_units" = " min.";
 "movie_details_rating_format" = "%.1f";
 "movie_details_votes" = "votes";

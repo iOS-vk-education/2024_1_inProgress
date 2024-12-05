@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 @MainActor
 class SearchViewModel: ObservableObject {
@@ -15,22 +16,32 @@ class SearchViewModel: ObservableObject {
     private var isLoading = false
     private var currentPage = 1
 
+    private var cancellables = Set<AnyCancellable>()
     private let networkService = NetworkService()
 
     init() {
-        Task {
-            await monitorSearchTextChanges()
-        }
+        monitorSearchTextChanges()
     }
 
-    private func monitorSearchTextChanges() async {
-        for await newText in $searchText.values {
-            if !newText.isEmpty {
+    private func monitorSearchTextChanges() {
+            $searchText
+                .debounce(for: .seconds(1), scheduler: DispatchQueue.main) // Задержка 2 секунды
+                .removeDuplicates() // Игнорирует одинаковые значения
+                .sink { [weak self] newText in
+                    guard let self = self else { return }
+                    Task {
+                        await self.handleSearchTextChange(newText)
+                    }
+                }
+                .store(in: &cancellables)
+        }
+
+        private func handleSearchTextChange(_ text: String) async {
+            if !text.isEmpty {
                 resetPagination()
-                await searchMovies(query: newText)
+                await searchMovies(query: text)
             }
         }
-    }
 
     func searchMovies(query: String) async {
         guard !query.isEmpty, !isLoading else { return }

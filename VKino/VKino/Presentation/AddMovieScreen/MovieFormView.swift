@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieFormView: View {
-    @Binding var movie: MovieEditable
+    @Binding var movie: Movie
 
     var body: some View {
         VStack(spacing: Dimensions.Spacing.NORMAL) { 

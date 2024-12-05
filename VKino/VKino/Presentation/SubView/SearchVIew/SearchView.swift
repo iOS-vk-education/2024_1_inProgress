@@ -24,15 +24,15 @@ struct SearchView<Content: View>: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Dimensions.Spacing.NORMAL) {
             HStack {
                 TextField("Search", text: $searchViewModel.searchText, onEditingChanged: { isEditing in
                     showCancelButton = isEditing || !searchViewModel.searchText.isEmpty
                 })
-                .padding(8)
-                .padding(.horizontal, 8)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
+                .padding(Dimensions.Spacing.X_SMALL)
+                .padding(.horizontal, Dimensions.Spacing.X_SMALL)
+                .background(Colors.TEXT_FIELD_BACKGROUND_COLOR)
+                .cornerRadius(Dimensions.CornerRadius.X_LARGE)
                 
                 if showCancelButton {
                     Button("Cancel") {
@@ -40,22 +40,22 @@ struct SearchView<Content: View>: View {
                         showCancelButton = false
                         UIApplication.shared.endEditing()
                     }
-                    .foregroundColor(.blue)
+                    .foregroundColor(Colors.PRIMARY_BUTTON_COLOR)
                 }
             }
-            .padding(.horizontal, 16)
-            .frame(height: 36)
+            .padding(.horizontal, Dimensions.Spacing.NORMAL)
+            .frame(height: Constants.SearchViewDesignSystem.SEARCH_LINE_HEIGHT)
             
             if !searchViewModel.searchText.isEmpty && !searchViewModel.movies.isEmpty {
                 ScrollView {
                     LazyVStack {
                         ForEach(searchViewModel.movies, id: \.id) { movie in
                             MovieRow(movie: movie)
-                                .padding(.horizontal, 16)
-                                .padding(.top, 8)
+                                .padding(.horizontal, Dimensions.Spacing.NORMAL)
+                                .padding(.top,  Dimensions.Spacing.X_SMALL)
                                 .onTapGesture {
                                     onMovieSelected(movie)
-                                    router.path.append(.movieDetail(movie: movie))
+                                    router.path.append(.movieDetail(movie: Movie.from(movie)))
                                 }
                         }
                     }
@@ -64,7 +64,7 @@ struct SearchView<Content: View>: View {
                 content
             }
         }
-        .padding(.top, 16)
+        .padding(.top, Dimensions.Spacing.NORMAL)
     }
 }
 
@@ -77,20 +77,35 @@ struct MovieRow: View {
                 .resizable()
                 .placeholder {
                     ProgressView()
-                        .frame(width: 60, height: 60)
+                        .frame(
+                            width: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_WIDTH,
+                            height: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_WIDTH
+                        )
                 }
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 60, height: 90)
-                .cornerRadius(6)
+                .frame(
+                    width: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_WIDTH,
+                    height: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_HEIGHT
+                )
+                .cornerRadius(Dimensions.CornerRadius.NORMAL)
             
             Text(movie.name ?? movie.alternativeName ?? "")
                 .font(.headline)
-                .padding(.leading, 16)
+                .padding(.leading, Dimensions.Spacing.NORMAL)
             
             Spacer()
 
         }
         .frame(maxWidth: .infinity)
         .background(Color.white)
+    }
+}
+
+private enum Constants {
+    enum SearchViewDesignSystem {
+        static let MOVIE_PREVIEW_WIDTH: CGFloat = 60
+        static let MOVIE_PREVIEW_HEIGHT: CGFloat = 90
+        
+        static let SEARCH_LINE_HEIGHT: CGFloat = 36
     }
 }

@@ -1,0 +1,36 @@
+# Исключаем пользовательские данные Xcode
+.DS_Store
+*.swp
+*.xcuserstate
+*.xcscmblueprint
+*.swiftdoc
+*.swiftmodule
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.lock
+
+# Build-артефакты
+build/
+DerivedData/
+.idea/
+*.xcworkspace
+
+# Cocoapods
+Pods/
+*.lock
+
+# Swift Package Manager
+/.build/
+/Packages
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+

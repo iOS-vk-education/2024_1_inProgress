@@ -9,11 +9,8 @@ import SwiftUI
 
 struct TabBar: View {
     @State private var selectedTab: Tab = .home
-    @StateObject private var searchViewModel: SearchViewModel
     
-    init() {
-        _searchViewModel  = StateObject(wrappedValue: SearchViewModel())
-    }
+    private let homeViewModel: HomeViewModel = HomeViewModel()
 
     enum Tab {
         case home
@@ -24,14 +21,20 @@ struct TabBar: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             // TODO: one more tab with kinopoisk recomendations
-            HomeView(searchViewModel: searchViewModel)
+            HomeView(
+                searchViewModel: SearchViewModel(),
+                homeViewModel: homeViewModel
+            )
                 .tabItem {
                     Image(systemName: "house.fill")
                         .renderingMode(.template)
                 }
                 .tag(Tab.home)
 
-            AddMovieView(searchViewModel: searchViewModel)
+            AddMovieView(
+                searchViewModel: SearchViewModel(),
+                movie: Movie.emptyMovie()
+            )
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
                         .renderingMode(.template)
