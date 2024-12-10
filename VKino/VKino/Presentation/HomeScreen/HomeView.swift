@@ -38,16 +38,19 @@ struct HomeView: View {
                     ) {
                         ForEach(viewModel.movies, id: \.id) { movie in
                             moviePreview(movie: movie) {
-                                router.path.append(.movieDetail(movie: movie))
+                                router.path.append(.movieDetail(movie: movie, source: .movieList))
                             }
                         }
                     }
                     .padding(.horizontal, Dimensions.Spacing.NORMAL)
                 }
-            }.navigationDestination(for: MovieRoute.self) { route in
+            }
+            .navigationDestination(for: MovieRoute.self) { route in
                 switch route {
-                case .movieDetail(let movie):
-                    MovieDetailsView(movie: movie)
+                case .movieDetail(let movie, let source):
+                    MovieDetailsView(movie: movie, source: source, router: router)
+                case .addScreen(let movie):
+                    AddMovieView(searchViewModel: SearchViewModel(), movie: movie)
                 }
             }
         }.onAppear {

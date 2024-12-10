@@ -55,7 +55,7 @@ struct SearchView<Content: View>: View {
                                 .padding(.top,  Dimensions.Spacing.X_SMALL)
                                 .onTapGesture {
                                     onMovieSelected(movie)
-                                    router.path.append(.movieDetail(movie: Movie.from(movie)))
+                                    router.path.append(.movieDetail(movie: Movie.from(movie), source: .search))
                                 }
                         }
                     }

@@ -12,10 +12,12 @@ class MovieDetailsViewModel: ObservableObject {
     private var movieRepository: MovieRepository? = nil
     @Published var movie: Movie
 
+    private let router: Router
     @Published var showDeleteConfirmation = false
 
-    init(movie newMovie: Movie) {
+    init(movie newMovie: Movie, router newRouter: Router) {
         self.movie = newMovie
+        self.router = newRouter
     }
 
     func setMovieRepository(repository: MovieRepository) {
@@ -33,7 +35,12 @@ class MovieDetailsViewModel: ObservableObject {
     }
 
     func onEditClicked() {
-        // TODO: implement bavigation to edit screen
+        router.path.append(.addScreen(movie: movie))
+    }
+    
+    func onSaveClicked() {
+        movieRepository?.addMovie(movie)
+        router.path.removeAll()
     }
 
 }

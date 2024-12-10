@@ -13,9 +13,11 @@ struct MovieDetailsView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var movieRepository: MovieRepository
+    private var _source: MovieNavigationSource
 
-    init(movie: Movie) {
-        _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
+    init(movie: Movie, source: MovieNavigationSource, router: Router) {
+        _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie, router: router))
+        _source = source
     }
 
     var body: some View {
@@ -32,7 +34,7 @@ struct MovieDetailsView: View {
         .navigationTitle(viewModel.movie.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            deleteButton
+            toolbarButtons
         }
         .alert(getString("delete_alert_title"), isPresented: $viewModel.showDeleteConfirmation) {
             deleteAlertActions
@@ -101,22 +103,30 @@ private extension MovieDetailsView {
         .padding(.horizontal)
     }
 
-    var deleteButton: some ToolbarContent {
+    var toolbarButtons: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             
-            // TODO: here is gonna be logic behind passed movieType {FromSearch, FromMainScreen}
+            switch _source {
+            case .search:
+                Button {
+                    viewModel.onSaveClicked()
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .foregroundColor(.blue)
+                }
+            case .movieList:
+                Button(role: .destructive) {
+                    viewModel.setDeletionConfirmation(status: true)
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
             Button {
                 viewModel.onEditClicked()
             } label: {
                 Image(systemName: "pencil")
                     .foregroundColor(.blue)
-            }
-            
-            Button(role: .destructive) {
-                viewModel.setDeletionConfirmation(status: true)
-            } label: {
-                Image(systemName: "trash")
-                    .foregroundColor(.red)
             }
         }
     }
