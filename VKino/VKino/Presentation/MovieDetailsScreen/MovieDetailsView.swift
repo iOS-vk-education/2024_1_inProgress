@@ -57,12 +57,24 @@ struct MovieDetailsView: View {
 private extension MovieDetailsView {
     var movieHeaderView: some View {
         ZStack(alignment: .bottomLeading) {
-            KFImage(URL(string: viewModel.movie.imageUrl))
-                .resizable()
-                .scaledToFill()
-                .frame(height: Const.Sizes.POSTER_HEIGHT)
-                .clipped()
-            
+            // TODO: пофиксить отступы и верстку для Image
+            if !viewModel.movie.imageUrl.isEmpty {
+                KFImage(URL(string: viewModel.movie.imageUrl))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: Const.Sizes.POSTER_HEIGHT)
+                    .clipped()
+            } else if let imageData = viewModel.movie.imageData, let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: Dimensions.CornerRadius.NORMAL))
+            } else {
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(Colors.INPUT_FIELD_ICON_COLOR)
+            }
             LinearGradient(
                 gradient: Gradient(colors: [Color.black.opacity(Const.Other.GRADIENT_OPACITY), .clear]),
                 startPoint: .bottom,

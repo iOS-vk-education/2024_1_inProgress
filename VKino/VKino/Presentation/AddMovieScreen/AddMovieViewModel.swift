@@ -89,19 +89,6 @@ class AddMovieViewModel: ObservableObject {
         showEmptyImageAlert = false
     }
 
-    private func downloadImage(from urlString: String, completion: @escaping (Data?) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(nil)
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            DispatchQueue.main.async {
-                completion(data)
-            }
-        }.resume()
-    }
-
     private func isValidRating(_ rating: String) -> Bool {
         if rating.isEmpty {
             return true
