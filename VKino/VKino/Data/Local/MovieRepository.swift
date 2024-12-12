@@ -20,7 +20,10 @@ class MovieRepository: ObservableObject {
     }
 
     func updateMovie(_ updatedMovie: Movie) {
-        guard let index = movies.firstIndex(where: { $0.id == updatedMovie.id }) else { return }
+        guard let index = movies.firstIndex(where: { $0.id == updatedMovie.id }) else {
+            addMovie(updatedMovie)
+            return
+        }
         movies[index] = updatedMovie
     }
 

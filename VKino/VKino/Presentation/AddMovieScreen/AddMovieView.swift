@@ -8,16 +8,24 @@
 import SwiftUI
 
 struct AddMovieView: View {
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var movieRepository: MovieRepository
     @EnvironmentObject var router: Router
-    
+
     @ObservedObject private var searchViewModel: SearchViewModel
     @StateObject private var viewModel: AddMovieViewModel
+    @Binding private var selectedTab: TabBar.ScreenTab
+    private var source: AddMovieNavigationSource
 
-    init(searchViewModel: SearchViewModel, movie: Movie) {
+    init(
+        searchViewModel: SearchViewModel,
+        movie: Movie,
+        selectedTab: Binding<TabBar.ScreenTab>,
+        source: AddMovieNavigationSource
+    ) {
         self.searchViewModel = searchViewModel
         _viewModel = StateObject(wrappedValue: AddMovieViewModel(movie: movie))
+        self._selectedTab = selectedTab
+        self.source = source
     }
 
     var body: some View {
@@ -33,11 +41,16 @@ struct AddMovieView: View {
             }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button {
-                        viewModel.setShowingSearch(isShowing: true)
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                            .font(.title2)
+                    switch source {
+                    case .tabBar:
+                        Button {
+                            viewModel.setShowingSearch(isShowing: true)
+                        } label: {
+                            Image(systemName: "magnifyingglass")
+                                .font(.title2)
+                        }
+                    case .movieDetails:
+                        Spacer()
                     }
                     Button(action: {
                         saveMovie()
@@ -101,7 +114,18 @@ private extension AddMovieView {
     }
 
     func saveMovie() {
-        viewModel.saveMovie()
+        if source == .movieDetails {
+            viewModel.editMovie {
+                self.selectedTab = .home
+                self.router.path.removeLast()
+                self.router.path.removeLast()
+            }
+        } else {
+            viewModel.saveMovie {
+                self.selectedTab = .home
+                self.router.path.removeLast()
+            }
+        }
     }
 }
 

@@ -22,7 +22,7 @@ class AddMovieViewModel: ObservableObject {
     init(movie newMovie: Movie) {
         self.movie = newMovie
     }
-    
+
     func setMovieRepository(repository: MovieRepository) {
         self.movieRepository = repository
     }
@@ -35,7 +35,7 @@ class AddMovieViewModel: ObservableObject {
         }
     }
 
-    func saveMovie() {
+    func saveMovie(completion: @escaping () -> Void) {
         if movie.title.isEmpty {
             showEmptyTitleAlert = true
         } else if movie.imageData == nil {
@@ -44,8 +44,27 @@ class AddMovieViewModel: ObservableObject {
             showInvalidRatingAlert = true
         }
         else {
-            DispatchQueue.main.async {                self.movieRepository?.addMovie(self.movie)
+            DispatchQueue.main.async {
+                self.movieRepository?.addMovie(self.movie)
                 self.clearState()
+                completion()
+            }
+        }
+    }
+    
+    func editMovie(completion: @escaping () -> Void) {
+        if movie.title.isEmpty {
+            showEmptyTitleAlert = true
+        } else if movie.imageData == nil {
+            showEmptyImageAlert = true
+        } else if !isValidRating(movie.rating) {
+            showInvalidRatingAlert = true
+        }
+        else {
+            DispatchQueue.main.async {
+                self.movieRepository?.updateMovie(self.movie)
+                self.clearState()
+                completion()
             }
         }
     }
