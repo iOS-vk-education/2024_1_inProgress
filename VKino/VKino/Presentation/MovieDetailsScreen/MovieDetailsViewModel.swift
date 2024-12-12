@@ -12,12 +12,10 @@ class MovieDetailsViewModel: ObservableObject {
     private var movieRepository: MovieRepository? = nil
     @Published var movie: Movie
 
-    private let router: Router
     @Published var showDeleteConfirmation = false
 
-    init(movie newMovie: Movie, router newRouter: Router) {
+    init(movie newMovie: Movie) {
         self.movie = newMovie
-        self.router = newRouter
     }
 
     func setMovieRepository(repository: MovieRepository) {
@@ -34,13 +32,10 @@ class MovieDetailsViewModel: ObservableObject {
         showDeleteConfirmation = status
     }
 
-    func onEditClicked() {
-        router.path.append(.addScreen(movie: movie))
-    }
-    
     func onSaveClicked() {
-        movieRepository?.addMovie(movie)
-        router.path.removeAll()
+        DispatchQueue.main.async {
+            self.movieRepository?.addMovie(self.movie)
+        }
     }
 
 }

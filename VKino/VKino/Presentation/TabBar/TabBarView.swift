@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct TabBar: View {
-    @State private var selectedTab: Tab = .home
-    
-    private let homeViewModel: HomeViewModel = HomeViewModel()
+    @State private var selectedTab: ScreenTab = .home
 
-    enum Tab {
+    enum ScreenTab {
         case home
         case add
         case settings
@@ -23,30 +21,33 @@ struct TabBar: View {
             // TODO: one more tab with kinopoisk recomendations
             HomeView(
                 searchViewModel: SearchViewModel(),
-                homeViewModel: homeViewModel
+                homeViewModel: HomeViewModel(),
+                selectedTab: $selectedTab
             )
                 .tabItem {
                     Image(systemName: "house.fill")
                         .renderingMode(.template)
                 }
-                .tag(Tab.home)
+                .tag(ScreenTab.home)
 
             AddMovieView(
                 searchViewModel: SearchViewModel(),
-                movie: Movie.emptyMovie()
+                movie: Movie.emptyMovie(),
+                selectedTab: $selectedTab,
+                source: .tabBar
             )
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
                         .renderingMode(.template)
                 }
-                .tag(Tab.add)
+                .tag(ScreenTab.add)
 
             ContentView() // TODO: SettingsView()
                 .tabItem {
                     Image(systemName: "gearshape.fill")
                         .renderingMode(.template)
                 }
-                .tag(Tab.settings)
+                .tag(ScreenTab.settings)
         }
         .tabViewStyle(.automatic)
         .background(Color.white)

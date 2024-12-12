@@ -12,11 +12,17 @@ class Router: ObservableObject {
 }
 
 enum MovieRoute: Hashable {
-    case movieDetail(movie: Movie, source: MovieNavigationSource)
+    case movieDetail(movie: Movie, source: MovieDetailsNavigationSource)
     case addScreen(movie: Movie)
+    case mainScreen
 }
 
-enum MovieNavigationSource: Hashable {
-    case search
-    case movieList
+enum MovieDetailsNavigationSource: Hashable {
+    case searchView
+    case homeView
+}
+
+enum AddMovieNavigationSource: Hashable {
+    case movieDetails
+    case tabBar
 }

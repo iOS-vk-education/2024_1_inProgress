@@ -9,17 +9,20 @@ import SwiftUI
 import Kingfisher
 
 struct HomeView: View {
-    @ObservedObject private var searchViewModel: SearchViewModel
-    @ObservedObject private var viewModel: HomeViewModel
-
     @EnvironmentObject var router: Router
     @EnvironmentObject var movieRepository: MovieRepository
 
-    @State private var showCancelButton = false
+    @ObservedObject private var searchViewModel: SearchViewModel
+    @ObservedObject private var viewModel: HomeViewModel
+    @Binding private var selectedTab: TabBar.ScreenTab
 
-    init(searchViewModel: SearchViewModel, homeViewModel: HomeViewModel) {
+    @State private var showCancelButton = false
+    @State private var movies: [Movie] = []
+
+    init(searchViewModel: SearchViewModel, homeViewModel: HomeViewModel, selectedTab: Binding<TabBar.ScreenTab>) {
         self.searchViewModel = searchViewModel
         self.viewModel = homeViewModel
+        self._selectedTab = selectedTab
     }
 
     var body: some View {
@@ -38,7 +41,8 @@ struct HomeView: View {
                     ) {
                         ForEach(viewModel.movies, id: \.id) { movie in
                             moviePreview(movie: movie) {
-                                router.path.append(.movieDetail(movie: movie, source: .movieList))
+                                searchViewModel.searchText = ""
+                                router.path.append(.movieDetail(movie: movie, source: .homeView))
                             }
                         }
                     }
@@ -48,13 +52,20 @@ struct HomeView: View {
             .navigationDestination(for: MovieRoute.self) { route in
                 switch route {
                 case .movieDetail(let movie, let source):
-                    MovieDetailsView(movie: movie, source: source, router: router)
+                    MovieDetailsView(movie: movie, source: source, selectedTab: $selectedTab)
                 case .addScreen(let movie):
-                    AddMovieView(searchViewModel: SearchViewModel(), movie: movie)
+                    AddMovieView(
+                        searchViewModel: searchViewModel,
+                        movie: movie,
+                        selectedTab: $selectedTab,
+                        source: .movieDetails
+                    )
+                case .mainScreen:
+                    HomeView(searchViewModel: searchViewModel, homeViewModel: viewModel, selectedTab: $selectedTab)
                 }
             }
-        }.onAppear {
-            viewModel.setMovieRepository(repository: movieRepository)
+        }.onReceive(movieRepository.$movies) { movies in
+            viewModel.movies = movies
         }
     }
 }

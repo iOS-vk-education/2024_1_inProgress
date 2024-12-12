@@ -9,15 +9,22 @@ import SwiftUI
 import Kingfisher
 
 struct MovieDetailsView: View {
-    @StateObject private var viewModel: MovieDetailsViewModel
-    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var movieRepository: MovieRepository
-    private var _source: MovieNavigationSource
+    @EnvironmentObject var router: Router
+    
+    @StateObject private var viewModel: MovieDetailsViewModel
+    @Binding private var selectedTab: TabBar.ScreenTab
+    private var source: MovieDetailsNavigationSource
 
-    init(movie: Movie, source: MovieNavigationSource, router: Router) {
-        _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie, router: router))
-        _source = source
+    init(
+        movie: Movie,
+        source: MovieDetailsNavigationSource,
+        selectedTab: Binding<TabBar.ScreenTab>
+    ) {
+        _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
+        self.source = source
+        self._selectedTab = selectedTab
     }
 
     var body: some View {
@@ -106,15 +113,16 @@ private extension MovieDetailsView {
     var toolbarButtons: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             
-            switch _source {
-            case .search:
+            switch source {
+            case .searchView:
                 Button {
                     viewModel.onSaveClicked()
+                    router.path.removeLast()
                 } label: {
                     Image(systemName: "square.and.arrow.down")
                         .foregroundColor(.blue)
                 }
-            case .movieList:
+            case .homeView:
                 Button(role: .destructive) {
                     viewModel.setDeletionConfirmation(status: true)
                 } label: {
@@ -123,7 +131,7 @@ private extension MovieDetailsView {
                 }
             }
             Button {
-                viewModel.onEditClicked()
+                router.path.append(.addScreen(movie: viewModel.movie))
             } label: {
                 Image(systemName: "pencil")
                     .foregroundColor(.blue)
