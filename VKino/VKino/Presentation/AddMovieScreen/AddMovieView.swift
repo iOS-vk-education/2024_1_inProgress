@@ -117,13 +117,22 @@ private extension AddMovieView {
         if source == .movieDetails {
             viewModel.editMovie {
                 self.selectedTab = .home
-                self.router.path.removeLast()
-                self.router.path.removeLast()
+                closeScreen(2)
             }
         } else {
             viewModel.saveMovie {
                 self.selectedTab = .home
+                closeScreen(1)
+            }
+        }
+    }
+    
+    private func closeScreen(_ n: Int) {
+        for _ in 0..<n {
+            if !router.path.isEmpty {
                 self.router.path.removeLast()
+            } else {
+                break
             }
         }
     }

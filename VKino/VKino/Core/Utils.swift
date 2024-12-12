@@ -60,3 +60,16 @@ extension Movie {
 func getString(_ name: String) -> String {
     return NSLocalizedString(name, tableName: "AppStrings", comment: "")
 }
+
+func downloadImage(from urlString: String, completion: @escaping (Data?) -> Void) {
+    guard let url = URL(string: urlString) else {
+        completion(nil)
+        return
+    }
+
+    URLSession.shared.dataTask(with: url) { data, _, _ in
+        DispatchQueue.main.async {
+            completion(data)
+        }
+    }.resume()
+}

@@ -16,6 +16,11 @@ class MovieDetailsViewModel: ObservableObject {
 
     init(movie newMovie: Movie) {
         self.movie = newMovie
+        if movie.imageData == nil {
+            downloadImage(from: movie.imageUrl) { imageData in
+                self.movie.imageData = imageData
+            }
+        }
     }
 
     func setMovieRepository(repository: MovieRepository) {

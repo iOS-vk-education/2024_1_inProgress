@@ -32,6 +32,7 @@ struct HomeView: View {
                 onMovieSelected: { movie in }
             ) {
                 ScrollView {
+                    // TODO: пофиксить верстку сетки
                     LazyVGrid(
                         columns: [
                             GridItem(.flexible(), spacing: Dimensions.Spacing.X_SMALL),
@@ -72,25 +73,40 @@ struct HomeView: View {
 
 private extension HomeView {
     func moviePreview(movie: Movie, onTapGesture: @escaping () -> Void) -> some View {
-        KFImage(URL(string: movie.imageUrl))
-            .resizable()
-            .placeholder {
-                ProgressView()
+        Group {
+            if !movie.imageUrl.isEmpty {
+                KFImage(URL(string: movie.imageUrl))
+                    .resizable()
+                    .placeholder {
+                        ProgressView()
+                            .frame(
+                                width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
+                                height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
+                            )
+                    }
+                    .aspectRatio(contentMode: .fill)
                     .frame(
                         width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
                         height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
                     )
+                    .cornerRadius(Dimensions.CornerRadius.NORMAL)
+            } else if let imageData = movie.imageData, let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: Dimensions.CornerRadius.NORMAL))
+            } else {
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(Colors.INPUT_FIELD_ICON_COLOR)
             }
-            .aspectRatio(contentMode: .fill)
-            .frame(
-                width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
-                height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
-            )
-            .cornerRadius(Dimensions.CornerRadius.NORMAL)
-            .onTapGesture {
-                onTapGesture()
-            }
+        }
+        .onTapGesture {
+            onTapGesture()
+        }
     }
+
 }
 
 
