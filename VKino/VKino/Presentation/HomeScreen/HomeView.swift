@@ -35,10 +35,10 @@ struct HomeView: View {
                     // TODO: пофиксить верстку сетки
                     LazyVGrid(
                         columns: [
-                            GridItem(.flexible(), spacing: Dimensions.Spacing.X_SMALL),
-                            GridItem(.flexible(), spacing: Dimensions.Spacing.X_SMALL)
+                            GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall),
+                            GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall)
                         ],
-                        spacing: Dimensions.Spacing.NORMAL
+                        spacing: Dimensions.Spacing.normal
                     ) {
                         ForEach(viewModel.movies, id: \.id) { movie in
                             moviePreview(movie: movie) {
@@ -47,7 +47,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, Dimensions.Spacing.NORMAL)
+                    .padding(.horizontal, Dimensions.Spacing.normal)
                 }
             }
             .navigationDestination(for: MovieRoute.self) { route in
@@ -68,51 +68,5 @@ struct HomeView: View {
         }.onReceive(movieRepository.$movies) { movies in
             viewModel.movies = movies
         }
-    }
-}
-
-private extension HomeView {
-    func moviePreview(movie: Movie, onTapGesture: @escaping () -> Void) -> some View {
-        Group {
-            if !movie.imageUrl.isEmpty {
-                KFImage(URL(string: movie.imageUrl))
-                    .resizable()
-                    .placeholder {
-                        ProgressView()
-                            .frame(
-                                width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
-                                height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
-                            )
-                    }
-                    .aspectRatio(contentMode: .fill)
-                    .frame(
-                        width: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_WIDTH,
-                        height: Constants.HomeViewDesignSystem.MOVIE_PREVIEW_HEIGHT
-                    )
-                    .cornerRadius(Dimensions.CornerRadius.NORMAL)
-            } else if let imageData = movie.imageData, let uiImage = UIImage(data: imageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: Dimensions.CornerRadius.NORMAL))
-            } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Colors.INPUT_FIELD_ICON_COLOR)
-            }
-        }
-        .onTapGesture {
-            onTapGesture()
-        }
-    }
-
-}
-
-
-private enum Constants {
-    enum HomeViewDesignSystem {
-        static let MOVIE_PREVIEW_WIDTH: CGFloat = 171
-        static let MOVIE_PREVIEW_HEIGHT: CGFloat = 245
     }
 }

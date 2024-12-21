@@ -11,6 +11,7 @@ struct TabBar: View {
     @State private var selectedTab: ScreenTab = .home
 
     enum ScreenTab {
+        case recomendations
         case home
         case add
         case settings
@@ -18,7 +19,18 @@ struct TabBar: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // TODO: one more tab with kinopoisk recomendations
+            
+            RecomendationsView(
+                searchViewModel: SearchViewModel(),
+                recomendationsViewModel: RecomendationsViewModel(),
+                selectedTab: $selectedTab
+            )
+                .tabItem {
+                    Image(systemName: "star.fill")
+                        .renderingMode(.template)
+                }
+                .tag(ScreenTab.recomendations)
+            
             HomeView(
                 searchViewModel: SearchViewModel(),
                 homeViewModel: HomeViewModel(),
