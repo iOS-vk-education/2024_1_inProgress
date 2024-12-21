@@ -101,7 +101,6 @@ struct MovieRow: View {
 
         }
         .frame(maxWidth: .infinity)
-        .background(Color.white)
     }
 }
 
