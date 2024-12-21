@@ -25,6 +25,7 @@ struct MovieDetailsView: View {
         _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
         self.source = source
         self._selectedTab = selectedTab
+        print("LOL")
     }
 
     var body: some View {
@@ -142,7 +143,7 @@ private extension MovieDetailsView {
                 }
             }
             Button {
-                router.path.append(.addScreen(movie: viewModel.movie))
+                router.path.append(.addMovieView(movie: viewModel.movie))
             } label: {
                 Image(systemName: "pencil")
                     .foregroundColor(.blue)

@@ -42,14 +42,14 @@ struct AddMovieView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     switch source {
-                    case .tabBar:
+                    case .tabBarView:
                         Button {
                             viewModel.setShowingSearch(isShowing: true)
                         } label: {
                             Image(systemName: "magnifyingglass")
                                 .font(.title2)
                         }
-                    case .movieDetails:
+                    case .movieDetailsView:
                         Spacer()
                     }
                     Button(action: {
@@ -66,9 +66,10 @@ struct AddMovieView: View {
                     searchViewModel: searchViewModel,
                     onMovieSelected: { selectedMovie in
                         viewModel.updateMovie(newMovieInfo: selectedMovie)
-
                         viewModel.setShowingSearch(isShowing: false)
-                    }) {
+                    },
+                    source: .addMovieView
+                ) {
                     Spacer()
                 }
             }
@@ -109,12 +110,12 @@ struct AddMovieView: View {
 }
 
 private extension AddMovieView {
-    func deleteMovie() {
+    private func deleteMovie() {
         viewModel.deleteMovie()
     }
 
-    func saveMovie() {
-        if source == .movieDetails {
+    private func saveMovie() {
+        if source == .movieDetailsView {
             viewModel.editMovie {
                 self.selectedTab = .home
                 closeScreen(2)
@@ -126,7 +127,7 @@ private extension AddMovieView {
             }
         }
     }
-    
+
     private func closeScreen(_ n: Int) {
         for _ in 0..<n {
             if !router.path.isEmpty {

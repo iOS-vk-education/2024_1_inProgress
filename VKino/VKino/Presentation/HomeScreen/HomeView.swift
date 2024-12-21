@@ -29,7 +29,8 @@ struct HomeView: View {
         NavigationStack(path: $router.path) {
             SearchView(
                 searchViewModel: searchViewModel,
-                onMovieSelected: { movie in }
+                onMovieSelected: { movie in },
+                source: .homeView
             ) {
                 ScrollView {
                     // TODO: пофиксить верстку сетки
@@ -43,7 +44,7 @@ struct HomeView: View {
                         ForEach(viewModel.movies, id: \.id) { movie in
                             moviePreview(movie: movie) {
                                 searchViewModel.searchText = ""
-                                router.path.append(.movieDetail(movie: movie, source: .homeView))
+                                router.path.append(.movieDetailsView(movie: movie, source: .homeView))
                             }
                         }
                     }
@@ -52,16 +53,16 @@ struct HomeView: View {
             }
             .navigationDestination(for: MovieRoute.self) { route in
                 switch route {
-                case .movieDetail(let movie, let source):
+                case .movieDetailsView(let movie, let source):
                     MovieDetailsView(movie: movie, source: source, selectedTab: $selectedTab)
-                case .addScreen(let movie):
+                case .addMovieView(let movie):
                     AddMovieView(
                         searchViewModel: searchViewModel,
                         movie: movie,
                         selectedTab: $selectedTab,
-                        source: .movieDetails
+                        source: .movieDetailsView
                     )
-                case .mainScreen:
+                case .homeView:
                     HomeView(searchViewModel: searchViewModel, homeViewModel: viewModel, selectedTab: $selectedTab)
                 }
             }
