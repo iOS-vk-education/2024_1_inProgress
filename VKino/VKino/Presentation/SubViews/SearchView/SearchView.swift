@@ -14,13 +14,20 @@ struct SearchView<Content: View>: View {
     @State private var showCancelButton = false
     @EnvironmentObject var router: Router
 
-    let content: Content
-    let onMovieSelected: (MovieInfo) -> Void
+    private let content: Content
+    private let onMovieSelected: (MovieInfo) -> Void
+    private var source: SearchViewSource
 
-    init(searchViewModel: SearchViewModel, onMovieSelected: @escaping (MovieInfo) -> Void, @ViewBuilder content: () -> Content) {
+    init(
+        searchViewModel: SearchViewModel,
+        onMovieSelected: @escaping (MovieInfo) -> Void,
+        source: SearchViewSource,
+        @ViewBuilder content: () -> Content
+    ) {
         self.searchViewModel = searchViewModel
         self.content = content()
         self.onMovieSelected = onMovieSelected
+        self.source = source
     }
 
     var body: some View {
@@ -55,7 +62,10 @@ struct SearchView<Content: View>: View {
                                 .padding(.top,  Dimensions.Spacing.xSmall)
                                 .onTapGesture {
                                     onMovieSelected(movie)
-                                    router.path.append(.movieDetail(movie: Movie.from(movie), source: .searchView))
+                                    if self.source == .homeView {
+                                        router.path.append(.movieDetailsView(movie: Movie.from(movie), source: .searchView))
+                                    }
+
                                 }
                         }
                     }

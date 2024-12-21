@@ -37,7 +37,7 @@ struct RecomendationsView: View {
                 ) {
                     ForEach(viewModel.movies, id: \.id) { movie in
                         moviePreview(movie: movie) {
-                            router.path.append(.movieDetail(movie: movie, source: .recomendationsView))
+                            router.path.append(.movieDetailsView(movie: movie, source: .recomendationsView))
                         }.onAppear {
                             if movie == viewModel.movies.last {
                                 Task {
@@ -51,14 +51,14 @@ struct RecomendationsView: View {
             }
             .navigationDestination(for: MovieRoute.self) { route in
                 switch route {
-                case .movieDetail(let movie, let source):
+                case .movieDetailsView(let movie, let source):
                     MovieDetailsView(movie: movie, source: source, selectedTab: $selectedTab)
-                case .addScreen(let movie):
+                case .addMovieView(let movie):
                     AddMovieView(
                         searchViewModel: searchViewModel,
                         movie: movie,
                         selectedTab: $selectedTab,
-                        source: .movieDetails
+                        source: .movieDetailsView
                     )
                 default: Spacer()
                     // no - op

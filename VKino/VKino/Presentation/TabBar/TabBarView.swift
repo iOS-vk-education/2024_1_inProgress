@@ -46,7 +46,7 @@ struct TabBar: View {
                 searchViewModel: SearchViewModel(),
                 movie: Movie.emptyMovie(),
                 selectedTab: $selectedTab,
-                source: .tabBar
+                source: .tabBarView
             )
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
@@ -62,6 +62,5 @@ struct TabBar: View {
                 .tag(ScreenTab.settings)
         }
         .tabViewStyle(.automatic)
-        .background(Color.white)
     }
 }
