@@ -36,14 +36,14 @@ class SearchViewModel: ObservableObject {
                 .store(in: &cancellables)
         }
 
-        private func handleSearchTextChange(_ text: String) async {
-            if !text.isEmpty {
-                resetPagination()
-                await searchMovies(query: text)
-            }
+    private func handleSearchTextChange(_ text: String) async {
+        if !text.isEmpty {
+            resetPagination()
+            await searchMovies(query: text)
         }
+    }
 
-    func searchMovies(query: String) async {
+    private func searchMovies(query: String) async {
         guard !query.isEmpty, !isLoading else { return }
         
         isLoading = true

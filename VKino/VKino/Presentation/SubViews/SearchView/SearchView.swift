@@ -24,15 +24,15 @@ struct SearchView<Content: View>: View {
     }
 
     var body: some View {
-        VStack(spacing: Dimensions.Spacing.NORMAL) {
+        VStack(spacing: Dimensions.Spacing.normal) {
             HStack {
                 TextField("Search", text: $searchViewModel.searchText, onEditingChanged: { isEditing in
                     showCancelButton = isEditing || !searchViewModel.searchText.isEmpty
                 })
-                .padding(Dimensions.Spacing.X_SMALL)
-                .padding(.horizontal, Dimensions.Spacing.X_SMALL)
-                .background(Colors.TEXT_FIELD_BACKGROUND_COLOR)
-                .cornerRadius(Dimensions.CornerRadius.X_LARGE)
+                .padding(Dimensions.Spacing.xSmall)
+                .padding(.horizontal, Dimensions.Spacing.xSmall)
+                .background(Colors.textFieldBackgroundColor)
+                .cornerRadius(Dimensions.CornerRadius.xLarge)
                 
                 if showCancelButton {
                     Button("Cancel") {
@@ -40,19 +40,19 @@ struct SearchView<Content: View>: View {
                         showCancelButton = false
                         UIApplication.shared.endEditing()
                     }
-                    .foregroundColor(Colors.PRIMARY_BUTTON_COLOR)
+                    .foregroundColor(Colors.primaryButtonColor)
                 }
             }
-            .padding(.horizontal, Dimensions.Spacing.NORMAL)
-            .frame(height: Constants.SearchViewDesignSystem.SEARCH_LINE_HEIGHT)
+            .padding(.horizontal, Dimensions.Spacing.normal)
+            .frame(height: Constants.SearchViewDesignSystem.searchLineHeight)
             
             if !searchViewModel.searchText.isEmpty && !searchViewModel.movies.isEmpty {
                 ScrollView {
                     LazyVStack {
                         ForEach(searchViewModel.movies, id: \.id) { movie in
                             MovieRow(movie: movie)
-                                .padding(.horizontal, Dimensions.Spacing.NORMAL)
-                                .padding(.top,  Dimensions.Spacing.X_SMALL)
+                                .padding(.horizontal, Dimensions.Spacing.normal)
+                                .padding(.top,  Dimensions.Spacing.xSmall)
                                 .onTapGesture {
                                     onMovieSelected(movie)
                                     router.path.append(.movieDetail(movie: Movie.from(movie), source: .searchView))
@@ -64,7 +64,7 @@ struct SearchView<Content: View>: View {
                 content
             }
         }
-        .padding(.top, Dimensions.Spacing.NORMAL)
+        .padding(.top, Dimensions.Spacing.normal)
         .onAppear {
             showCancelButton = false
             searchViewModel.searchText = ""
@@ -82,20 +82,20 @@ struct MovieRow: View {
                 .placeholder {
                     ProgressView()
                         .frame(
-                            width: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_WIDTH,
-                            height: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_WIDTH
+                            width: Constants.SearchViewDesignSystem.moviePreviewWidth,
+                            height: Constants.SearchViewDesignSystem.moviePreviewWidth
                         )
                 }
                 .aspectRatio(contentMode: .fit)
                 .frame(
-                    width: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_WIDTH,
-                    height: Constants.SearchViewDesignSystem.MOVIE_PREVIEW_HEIGHT
+                    width: Constants.SearchViewDesignSystem.moviePreviewWidth,
+                    height: Constants.SearchViewDesignSystem.moviePreviewHeight
                 )
-                .cornerRadius(Dimensions.CornerRadius.NORMAL)
+                .cornerRadius(Dimensions.CornerRadius.normal)
             
             Text(movie.name ?? movie.alternativeName ?? "")
                 .font(.headline)
-                .padding(.leading, Dimensions.Spacing.NORMAL)
+                .padding(.leading, Dimensions.Spacing.normal)
             
             Spacer()
 
@@ -107,9 +107,9 @@ struct MovieRow: View {
 
 private enum Constants {
     enum SearchViewDesignSystem {
-        static let MOVIE_PREVIEW_WIDTH: CGFloat = 60
-        static let MOVIE_PREVIEW_HEIGHT: CGFloat = 90
+        static let moviePreviewWidth: CGFloat = 60
+        static let moviePreviewHeight: CGFloat = 90
         
-        static let SEARCH_LINE_HEIGHT: CGFloat = 36
+        static let searchLineHeight: CGFloat = 36
     }
 }

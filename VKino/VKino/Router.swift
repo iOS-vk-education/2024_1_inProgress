@@ -20,6 +20,7 @@ enum MovieRoute: Hashable {
 enum MovieDetailsNavigationSource: Hashable {
     case searchView
     case homeView
+    case recomendationsView
 }
 
 enum AddMovieNavigationSource: Hashable {

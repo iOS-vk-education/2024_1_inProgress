@@ -24,7 +24,7 @@ struct MovieImagePreviewView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(height: MovieImagePreviewConstants.IMAGE_HEIGHT)
-                    .foregroundColor(Colors.INPUT_FIELD_ICON_COLOR)
+                    .foregroundColor(Colors.inputFieldIconColor)
             }
 
             Button(action: { showingImagePicker = true }) {

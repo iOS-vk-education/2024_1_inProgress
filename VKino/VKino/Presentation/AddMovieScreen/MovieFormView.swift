@@ -11,7 +11,7 @@ struct MovieFormView: View {
     @Binding var movie: Movie
 
     var body: some View {
-        VStack(spacing: Dimensions.Spacing.NORMAL) { 
+        VStack(spacing: Dimensions.Spacing.normal) {
             VStack {
                 TextField("Title", text: $movie.title)
                     .multilineTextAlignment(.center)
@@ -25,7 +25,7 @@ struct MovieFormView: View {
 
             Divider()
 
-            VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
+            VStack(alignment: .leading, spacing: Dimensions.Spacing.normal) {
                 inputField(placeholder: "Enter category", text: $movie.category, systemImage: "books.vertical")
                 inputField(placeholder: "Enter duration", text: $movie.duration, systemImage: "clock")
                 inputField(placeholder: "Enter description", text: $movie.description, systemImage: "line.3.horizontal")
@@ -33,28 +33,28 @@ struct MovieFormView: View {
                 inputField(placeholder: "Enter author", text: $movie.author, systemImage: "person")
                 inputField(placeholder: "Enter rating", text: $movie.rating, systemImage: "star.fill", iconColor: .yellow)
             }
-            .padding(.horizontal, Dimensions.Spacing.SMALL)
+            .padding(.horizontal, Dimensions.Spacing.small)
         }
-        .padding(Dimensions.Spacing.SMALL)
+        .padding(Dimensions.Spacing.small)
     }
 
     private func inputField(
         placeholder: String,
         text: Binding<String>,
         systemImage: String,
-        iconColor: Color = Colors.INPUT_FIELD_ICON_COLOR 
+        iconColor: Color = Colors.inputFieldIconColor
     ) -> some View {
-        HStack(alignment: .center, spacing: Dimensions.Spacing.X_SMALL) {
+        HStack(alignment: .center, spacing: Dimensions.Spacing.xSmall) {
             Image(systemName: systemImage)
-                .frame(width: Dimensions.Spacing.ICON_SIZE, height: Dimensions.Spacing.ICON_SIZE)
+                .frame(width: Dimensions.Spacing.iconSize, height: Dimensions.Spacing.iconSize)
                 .foregroundColor(iconColor)
 
-            VStack(alignment: .leading, spacing: Dimensions.Spacing.X_X_SMALL) {
+            VStack(alignment: .leading, spacing: Dimensions.Spacing.xxSmall) {
                 TextField(placeholder, text: text)
-                    .padding(Dimensions.Spacing.X_X_SMALL)
+                    .padding(Dimensions.Spacing.xxSmall)
                     .background(
-                        RoundedRectangle(cornerRadius: Dimensions.CornerRadius.SMALL)
-                            .stroke(Colors.BORDER_COLOR)
+                        RoundedRectangle(cornerRadius: Dimensions.CornerRadius.small)
+                            .stroke(Colors.borderColor)
                     )
             }
         }

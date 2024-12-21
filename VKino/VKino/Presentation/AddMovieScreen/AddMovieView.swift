@@ -31,7 +31,7 @@ struct AddMovieView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: Dimensions.Spacing.NORMAL) {
+                VStack(spacing: Dimensions.Spacing.normal) {
                     MovieImagePreviewView(
                         imageData: $viewModel.movie.imageData,
                         showingImagePicker: $viewModel.showingImagePicker
@@ -57,7 +57,7 @@ struct AddMovieView: View {
                     }) {
                         Image(systemName: "square.and.arrow.down")
                             .font(.title2)
-                            .foregroundColor(Colors.PRIMARY_BUTTON_COLOR)
+                            .foregroundColor(Colors.primaryButtonColor)
                     }
                 }
             }

@@ -29,7 +29,7 @@ struct MovieDetailsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
+            VStack(alignment: .leading, spacing: Dimensions.Spacing.normal) {
                 movieHeaderView
                 movieDetailsView
                 if let votes = viewModel.movie.votes {
@@ -68,12 +68,12 @@ private extension MovieDetailsView {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: Dimensions.CornerRadius.NORMAL))
+                    .clipShape(RoundedRectangle(cornerRadius: Dimensions.CornerRadius.normal))
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .foregroundColor(Colors.INPUT_FIELD_ICON_COLOR)
+                    .foregroundColor(Colors.inputFieldIconColor)
             }
             LinearGradient(
                 gradient: Gradient(colors: [Color.black.opacity(Const.Other.GRADIENT_OPACITY), .clear]),
@@ -91,7 +91,7 @@ private extension MovieDetailsView {
     }
 
     var movieDetailsView: some View {
-        VStack(alignment: .leading, spacing: Dimensions.Spacing.NORMAL) {
+        VStack(alignment: .leading, spacing: Dimensions.Spacing.normal) {
             if !viewModel.movie.category.isEmpty {
                 detailLabel(text: viewModel.movie.category, systemImage: "info.circle")
             }
@@ -110,7 +110,7 @@ private extension MovieDetailsView {
     }
 
     func ratingAndVotesView(rating: String, votes: Votes) -> some View {
-        HStack(spacing: Dimensions.Spacing.NORMAL) {
+        HStack(spacing: Dimensions.Spacing.normal) {
             Label(rating, systemImage: "star.fill")
                 .font(.headline)
                 .foregroundColor(.yellow)
@@ -124,9 +124,8 @@ private extension MovieDetailsView {
 
     var toolbarButtons: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            
             switch source {
-            case .searchView:
+            case .searchView, .recomendationsView:
                 Button {
                     viewModel.onSaveClicked()
                     router.path.removeLast()
