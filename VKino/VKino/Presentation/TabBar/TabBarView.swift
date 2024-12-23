@@ -54,10 +54,9 @@ struct TabBar: View {
                 }
                 .tag(ScreenTab.add)
 
-            ContentView() // TODO: SettingsView()
+            SettingsView()
                 .tabItem {
                     Image(systemName: "gearshape.fill")
-                        .renderingMode(.template)
                 }
                 .tag(ScreenTab.settings)
         }

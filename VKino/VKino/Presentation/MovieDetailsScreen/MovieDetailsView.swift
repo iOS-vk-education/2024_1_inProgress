@@ -25,7 +25,6 @@ struct MovieDetailsView: View {
         _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
         self.source = source
         self._selectedTab = selectedTab
-        print("LOL")
     }
 
     var body: some View {
@@ -44,10 +43,10 @@ struct MovieDetailsView: View {
         .toolbar {
             toolbarButtons
         }
-        .alert(getString("delete_alert_title"), isPresented: $viewModel.showDeleteConfirmation) {
+        .alert(NSLocalizedString("delete_alert_title", comment: "Title for delete confirmation alert"), isPresented: $viewModel.showDeleteConfirmation) {
             deleteAlertActions
         } message: {
-            Text(getString("delete_alert_message"))
+            Text(NSLocalizedString("delete_alert_message", comment: "Message for delete confirmation alert"))
         }
         .onAppear {
             viewModel.setMovieRepository(repository: movieRepository)
@@ -58,7 +57,6 @@ struct MovieDetailsView: View {
 private extension MovieDetailsView {
     var movieHeaderView: some View {
         ZStack(alignment: .bottomLeading) {
-            // TODO: пофиксить отступы и верстку для Image
             if !viewModel.movie.imageUrl.isEmpty {
                 KFImage(URL(string: viewModel.movie.imageUrl))
                     .resizable()
@@ -116,7 +114,7 @@ private extension MovieDetailsView {
                 .font(.headline)
                 .foregroundColor(.yellow)
 
-            Text("\(votes.kp) " + getString("movie_details_votes"))
+            Text("\(votes.kp) " + NSLocalizedString("movie_details_votes", comment: "Label for votes count"))
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -153,10 +151,10 @@ private extension MovieDetailsView {
 
     var deleteAlertActions: some View {
         Group {
-            Button(getString("delete_button_label"), role: .destructive) {
+            Button(NSLocalizedString("delete_button_label", comment: "Label for delete button"), role: .destructive) {
                 deleteMovie()
             }
-            Button(getString("cancel_button_label"), role: .cancel) {}
+            Button(NSLocalizedString("cancel_button_label", comment: "Label for cancel button"), role: .cancel) {}
         }
     }
 }
