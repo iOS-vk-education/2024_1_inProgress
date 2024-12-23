@@ -169,16 +169,3 @@ private enum Alerts {
     static let cancelButtonTitle: String = NSLocalizedString("cancelButtonTitle", comment: "Cancel button title")
     static let okButtonTitle: String = NSLocalizedString("okButtonTitle", comment: "OK button title")
 }
-
-
-//private enum Alerts {
-//    static let errorTitle: String = "Ошибка"
-//    static let emptyTitleMessage: String = "Пожалуйста, введите название фильма."
-//    static let emptyImageMessage: String = "Пожалуйста, загрузите изображение фильма."
-//    static let invalidRatingMessage: String = "Пожалуйста, введите корректный рейтинг от 0 до 10."
-//    static let deleteConfirmationTitle: String = "Удалить фильм"
-//    static let deleteConfirmationMessage: String = "Вы уверены, что хотите удалить этот фильм?"
-//    static let deleteButtonTitle: String = "Удалить"
-//    static let cancelButtonTitle: String = "Отмена"
-//    static let okButtonTitle: String = "ОК"
-//}
