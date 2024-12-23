@@ -14,6 +14,5 @@ struct SettingsView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: SettingsViewController, context: Context) {
-        // Обновите контроллер, если необходимо
     }
 }
