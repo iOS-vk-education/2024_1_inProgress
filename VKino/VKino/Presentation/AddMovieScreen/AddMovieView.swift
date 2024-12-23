@@ -29,92 +29,111 @@ struct AddMovieView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: Dimensions.Spacing.normal) {
-                    MovieImagePreviewView(
-                        imageData: $viewModel.movie.imageData,
-                        showingImagePicker: $viewModel.showingImagePicker
-                    )
-                    MovieFormView(movie: $viewModel.movie)
-                }
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    switch source {
-                    case .tabBarView:
-                        Button {
-                            viewModel.setShowingSearch(isShowing: true)
-                        } label: {
-                            Image(systemName: "magnifyingglass")
-                                .font(.title2)
+        Group {
+            if source == .tabBarView {
+                NavigationView {
+                    content
+                        .navigationBarTitle("Добавить фильм", displayMode: .inline)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                                toolbarContent
+                            }
                         }
-                    case .movieDetailsView:
-                        Spacer()
-                    }
-                    Button(action: {
-                        saveMovie()
-                    }) {
-                        Image(systemName: "square.and.arrow.down")
-                            .font(.title2)
-                            .foregroundColor(Colors.primaryButtonColor)
-                    }
                 }
+            } else {
+                content
+                    .toolbar {
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
+                            toolbarContent
+                        }
+                    }
             }
-            .sheet(isPresented: $viewModel.shouldShowSearchSheet) {
-                SearchView(
-                    searchViewModel: searchViewModel,
-                    onMovieSelected: { selectedMovie in
-                        viewModel.updateMovie(newMovieInfo: selectedMovie)
-                        viewModel.setShowingSearch(isShowing: false)
-                    },
-                    source: .addMovieView
-                ) {
-                    Spacer()
-                }
-            }
-            .alert(Alerts.ERROR_TITLE, isPresented: $viewModel.showEmptyTitleAlert) {
-                Button(Alerts.OK_BUTTON_TITLE, role: .cancel) { }
-            } message: {
-                Text(Alerts.EMPTY_TITLE_MESSAGE)
-            }
-            .alert(Alerts.ERROR_TITLE, isPresented: $viewModel.showEmptyImageAlert) {
-                Button(Alerts.OK_BUTTON_TITLE, role: .cancel) { }
-            } message: {
-                Text(Alerts.EMPTY_IMAGE_MESSAGE)
-            }
-            .alert(Alerts.ERROR_TITLE, isPresented: $viewModel.showInvalidRatingAlert) {
-                Button(Alerts.OK_BUTTON_TITLE, role: .cancel) { }
-            } message: {
-                Text(Alerts.INVALID_RATING_MESSAGE)
-            }
-            .alert(Alerts.DELETE_CONFIRMATION_TITLE, isPresented: $viewModel.showDeleteConfirmation) {
-                deleteAlertActions
-            } message: {
-                Text(Alerts.DELETE_CONFIRMATION_MESSAGE)
-            }
-        }.onAppear {
+        }
+        .onAppear {
             viewModel.setMovieRepository(repository: movieRepository)
+        }
+    }
+
+    private var content: some View {
+        ScrollView {
+            VStack(spacing: Dimensions.Spacing.normal) {
+                MovieImagePreviewView(
+                    imageData: $viewModel.movie.imageData,
+                    showingImagePicker: $viewModel.showingImagePicker
+                )
+                MovieFormView(movie: $viewModel.movie)
+            }
+        }
+        .sheet(isPresented: $viewModel.shouldShowSearchSheet) {
+            SearchView(
+                searchViewModel: searchViewModel,
+                onMovieSelected: { selectedMovie in
+                    viewModel.updateMovie(newMovieInfo: selectedMovie)
+                    viewModel.setShowingSearch(isShowing: false)
+                },
+                source: .addMovieView
+            ) {
+                Spacer()
+            }
+        }
+        .alert(Alerts.errorTitle, isPresented: $viewModel.showEmptyTitleAlert) {
+            Button(Alerts.okButtonTitle, role: .cancel) { }
+        } message: {
+            Text(Alerts.emptyTitleMessage)
+        }
+        .alert(Alerts.errorTitle, isPresented: $viewModel.showEmptyImageAlert) {
+            Button(Alerts.okButtonTitle, role: .cancel) { }
+        } message: {
+            Text(Alerts.emptyImageMessage)
+        }
+        .alert(Alerts.errorTitle, isPresented: $viewModel.showInvalidRatingAlert) {
+            Button(Alerts.okButtonTitle, role: .cancel) { }
+        } message: {
+            Text(Alerts.invalidRatingMessage)
+        }
+        .alert(Alerts.deleteConfirmationTitle, isPresented: $viewModel.showDeleteConfirmation) {
+            deleteAlertActions
+        } message: {
+            Text(Alerts.deleteConfirmationMessage)
+        }
+    }
+
+    private var toolbarContent: some View {
+        Group {
+            if source == .tabBarView {
+                Button {
+                    viewModel.setShowingSearch(isShowing: true)
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.title2)
+                }
+            }
+            Button(action: {
+                saveMovie()
+            }) {
+                Image(systemName: "square.and.arrow.down")
+                    .font(.title2)
+                    .foregroundColor(Colors.primaryButtonColor)
+            }
         }
     }
 
     private var deleteAlertActions: some View {
         Group {
-            Button(Alerts.DELETE_BUTTON_TITLE, role: .destructive) {
+            Button(Alerts.deleteButtonTitle, role: .destructive) {
                 deleteMovie()
             }
-            Button(Alerts.CANCEL_BUTTON_TITLE, role: .cancel) {}
+            Button(Alerts.cancelButtonTitle, role: .cancel) {}
         }
     }
-
 }
 
 private extension AddMovieView {
-    private func deleteMovie() {
+    func deleteMovie() {
         viewModel.deleteMovie()
     }
 
-    private func saveMovie() {
+    func saveMovie() {
         if source == .movieDetailsView {
             viewModel.editMovie {
                 self.selectedTab = .home
@@ -128,7 +147,7 @@ private extension AddMovieView {
         }
     }
 
-    private func closeScreen(_ n: Int) {
+    func closeScreen(_ n: Int) {
         for _ in 0..<n {
             if !router.path.isEmpty {
                 self.router.path.removeLast()
@@ -140,13 +159,26 @@ private extension AddMovieView {
 }
 
 private enum Alerts {
-    static let ERROR_TITLE: String = "Error"
-    static let EMPTY_TITLE_MESSAGE: String = "Please fill in the movie title."
-    static let EMPTY_IMAGE_MESSAGE: String = "Please upload the movie image."
-    static let INVALID_RATING_MESSAGE: String = "Please enter a valid rating between 0 and 10."
-    static let DELETE_CONFIRMATION_TITLE: String = "Delete Movie"
-    static let DELETE_CONFIRMATION_MESSAGE: String = "Are you sure you want to delete this movie?"
-    static let DELETE_BUTTON_TITLE: String = "Delete"
-    static let CANCEL_BUTTON_TITLE: String = "Cancel"
-    static let OK_BUTTON_TITLE: String = "OK"
+    static let errorTitle: String = NSLocalizedString("errorTitle", comment: "Title for error alert")
+    static let emptyTitleMessage: String = NSLocalizedString("emptyTitleMessage", comment: "Message for empty title")
+    static let emptyImageMessage: String = NSLocalizedString("emptyImageMessage", comment: "Message for empty image")
+    static let invalidRatingMessage: String = NSLocalizedString("invalidRatingMessage", comment: "Message for invalid rating")
+    static let deleteConfirmationTitle: String = NSLocalizedString("deleteConfirmationTitle", comment: "Title for delete confirmation alert")
+    static let deleteConfirmationMessage: String = NSLocalizedString("deleteConfirmationMessage", comment: "Message for delete confirmation alert")
+    static let deleteButtonTitle: String = NSLocalizedString("deleteButtonTitle", comment: "Delete button title")
+    static let cancelButtonTitle: String = NSLocalizedString("cancelButtonTitle", comment: "Cancel button title")
+    static let okButtonTitle: String = NSLocalizedString("okButtonTitle", comment: "OK button title")
 }
+
+
+//private enum Alerts {
+//    static let errorTitle: String = "Ошибка"
+//    static let emptyTitleMessage: String = "Пожалуйста, введите название фильма."
+//    static let emptyImageMessage: String = "Пожалуйста, загрузите изображение фильма."
+//    static let invalidRatingMessage: String = "Пожалуйста, введите корректный рейтинг от 0 до 10."
+//    static let deleteConfirmationTitle: String = "Удалить фильм"
+//    static let deleteConfirmationMessage: String = "Вы уверены, что хотите удалить этот фильм?"
+//    static let deleteButtonTitle: String = "Удалить"
+//    static let cancelButtonTitle: String = "Отмена"
+//    static let okButtonTitle: String = "ОК"
+//}
