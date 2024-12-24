@@ -33,7 +33,6 @@ struct HomeView: View {
                 source: .homeView
             ) {
                 ScrollView {
-                    // TODO: пофиксить верстку сетки
                     LazyVGrid(
                         columns: [
                             GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall),

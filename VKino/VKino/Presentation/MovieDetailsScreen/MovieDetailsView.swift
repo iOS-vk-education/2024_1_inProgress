@@ -48,17 +48,17 @@ struct MovieDetailsView: View {
                 } label: {
                     HStack {
                         Image(systemName: "chevron.backward")
-                        Text("Back")
+                        Text(Strings.backButton)
                     }
                     .foregroundColor(.blue)
                 }
             }
             toolbarButtons
         }
-        .alert(NSLocalizedString("delete_alert_title", comment: "Title for delete confirmation alert"), isPresented: $viewModel.showDeleteConfirmation) {
+        .alert(Const.Strings.deleteAlertTitle, isPresented: $viewModel.showDeleteConfirmation) {
             deleteAlertActions
         } message: {
-            Text(NSLocalizedString("delete_alert_message", comment: "Message for delete confirmation alert"))
+            Text(Const.Strings.deleteAlertMessage)
         }
         .onAppear {
             viewModel.setMovieRepository(repository: movieRepository)
@@ -105,7 +105,7 @@ private extension MovieDetailsView {
                 .font(.headline)
                 .foregroundColor(.yellow)
 
-            Text("\(votes.kp) " + NSLocalizedString("movie_details_votes", comment: "Label for votes count"))
+            Text("\(votes.kp) " + Const.Strings.movieDetailsVotes)
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -142,10 +142,10 @@ private extension MovieDetailsView {
 
     var deleteAlertActions: some View {
         Group {
-            Button(NSLocalizedString("delete_button_label", comment: "Label for delete button"), role: .destructive) {
+            Button(Strings.deleteButton, role: .destructive) {
                 deleteMovie()
             }
-            Button(NSLocalizedString("cancel_button_label", comment: "Label for cancel button"), role: .cancel) {}
+            Button(Strings.cancelButton, role: .cancel) {}
         }
     }
 }
@@ -159,7 +159,7 @@ private extension MovieDetailsView {
         } icon: {
             Image(systemName: systemImage)
                 .resizable()
-                .frame(width: Const.Sizes.ICON_SIZE, height: Const.Sizes.ICON_SIZE)
+                .frame(width: Const.Sizes.iconSize, height: Const.Sizes.iconSize)
                 .foregroundColor(.gray)
                 .padding()
         }
@@ -180,12 +180,18 @@ private extension MovieDetailsView {
 
 private enum Const {
     enum Sizes {
-        static let ICON_SIZE: CGFloat = 24
-        static let POSTER_HEIGHT: CGFloat = 400
-        static let GRADIENT_HEIGHT: CGFloat = 80
+        static let iconSize: CGFloat = 24
+        static let posterHeight: CGFloat = 400
+        static let gradientHeight: CGFloat = 80
     }
     
     enum Other {
-        static let GRADIENT_OPACITY: Double = 0.8
+        static let gradientOpacity: Double = 0.8
+    }
+    
+    enum Strings {
+        static let deleteAlertTitle = NSLocalizedString("delete_alert_title", comment: "Title for delete confirmation alert")
+        static let deleteAlertMessage = NSLocalizedString("delete_alert_message", comment: "Message for delete confirmation alert")
+        static let movieDetailsVotes = NSLocalizedString("movie_details_votes", comment: "Label for votes count")
     }
 }

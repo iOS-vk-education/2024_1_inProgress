@@ -27,7 +27,6 @@ struct RecomendationsView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             ScrollView {
-                // TODO: пофиксить верстку сетки
                 LazyVGrid(
                     columns: [
                         GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall),

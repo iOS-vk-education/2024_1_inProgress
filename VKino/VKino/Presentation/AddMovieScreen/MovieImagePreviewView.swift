@@ -43,5 +43,4 @@ private enum MovieImagePreviewConstants {
     static let cornerRadius: CGFloat = 10.0
     static let addImageText: String = NSLocalizedString("addImageText", comment: "Text for the 'Add Image' button")
     static let changeImageText: String = NSLocalizedString("changeImageText", comment: "Text for the 'Change Image' button")
-        
 }

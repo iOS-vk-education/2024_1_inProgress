@@ -38,19 +38,6 @@ struct MovieInfo: Decodable, Equatable, Hashable {
     }
 }
 
-//struct Movie {
-//    var id: UUID
-//    var title: String
-//    var originalTitle: String
-//    var category: String
-//    var duration: String
-//    var description: String
-//    var author: String
-//    var imageData: Data?
-//    var actors: String
-//    var rating: String
-//}
-
 struct Movie: Decodable, Equatable, Hashable {
     var id: UUID
     var title: String

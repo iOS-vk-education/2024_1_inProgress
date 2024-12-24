@@ -24,7 +24,21 @@ final class LocalMovie {
     var rating: String
     var votes: LocalVotes?
 
-    init(id: UUID = UUID(), title: String, originalTitle: String, category: String, year: String, duration: String, description: String, author: String, imageUrl: String, imageData: Data? = nil, actors: String, rating: String, votes: LocalVotes? = nil) {
+    init(
+        id: UUID = UUID(),
+        title: String,
+        originalTitle: String,
+        category: String,
+        year: String,
+        duration: String,
+        description: String,
+        author: String,
+        imageUrl: String,
+        imageData: Data? = nil,
+        actors: String,
+        rating: String,
+        votes: LocalVotes? = nil
+    ) {
         self.id = id
         self.title = title
         self.originalTitle = originalTitle
