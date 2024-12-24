@@ -41,7 +41,7 @@ struct HomeView: View {
                         ],
                         spacing: Dimensions.Spacing.normal
                     ) {
-                        ForEach(viewModel.movies, id: \.id) { movie in
+                        ForEach(movies, id: \.id) { movie in
                             moviePreview(movie: movie) {
                                 searchViewModel.searchText = ""
                                 router.path.append(.movieDetailsView(movie: movie, source: .homeView))
@@ -67,7 +67,7 @@ struct HomeView: View {
                 }
             }
         }.onReceive(movieRepository.$movies) { movies in
-            viewModel.movies = movies
+            self.movies = movies
         }
     }
 }

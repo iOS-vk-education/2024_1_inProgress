@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TabBar: View {
     @State private var selectedTab: ScreenTab = .home
+    @StateObject private var router = Router()
 
     enum ScreenTab {
         case recomendations
@@ -60,6 +61,8 @@ struct TabBar: View {
                 }
                 .tag(ScreenTab.settings)
         }
+
         .tabViewStyle(.automatic)
+        .environmentObject(router)
     }
 }
