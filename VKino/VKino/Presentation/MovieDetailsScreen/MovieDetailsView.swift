@@ -25,7 +25,6 @@ struct MovieDetailsView: View {
         _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
         self.source = source
         self._selectedTab = selectedTab
-        print("LOL")
     }
 
     var body: some View {
@@ -41,7 +40,19 @@ struct MovieDetailsView: View {
         }
         .navigationTitle(viewModel.movie.title)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button {
+                    onBackButtonPressed()
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Back")
+                    }
+                    .foregroundColor(.blue)
+                }
+            }
             toolbarButtons
         }
         .alert(getString("delete_alert_title"), isPresented: $viewModel.showDeleteConfirmation) {
@@ -58,31 +69,7 @@ struct MovieDetailsView: View {
 private extension MovieDetailsView {
     var movieHeaderView: some View {
         ZStack(alignment: .bottomLeading) {
-            // TODO: пофиксить отступы и верстку для Image
-            if !viewModel.movie.imageUrl.isEmpty {
-                KFImage(URL(string: viewModel.movie.imageUrl))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: Const.Sizes.POSTER_HEIGHT)
-                    .clipped()
-            } else if let imageData = viewModel.movie.imageData, let uiImage = UIImage(data: imageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: Dimensions.CornerRadius.normal))
-            } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Colors.inputFieldIconColor)
-            }
-            LinearGradient(
-                gradient: Gradient(colors: [Color.black.opacity(Const.Other.GRADIENT_OPACITY), .clear]),
-                startPoint: .bottom,
-                endPoint: .top
-            )
-            .frame(height: Const.Sizes.POSTER_HEIGHT)
-
+            moviePreview(movie: viewModel.movie, onTapGesture: {})
             Text(viewModel.movie.title)
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -105,7 +92,9 @@ private extension MovieDetailsView {
                 detailLabel(text: viewModel.movie.year, systemImage: "calendar")
             }
 
-            detailLabel(text: viewModel.movie.description, systemImage: "line.3.horizontal")
+            if !viewModel.movie.description.isEmpty {
+                detailLabel(text: viewModel.movie.description, systemImage: "line.3.horizontal")
+            }
         }
         .padding(.horizontal)
     }
@@ -174,6 +163,11 @@ private extension MovieDetailsView {
                 .foregroundColor(.gray)
                 .padding()
         }
+    }
+    
+    func onBackButtonPressed() {
+        movieRepository.fetchMovies()
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

@@ -6,17 +6,22 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct VKinoApp: App {
-    @StateObject private var router = Router()
-    @StateObject private var movieRepository = MovieRepository()
+    private let container = try! ModelContainer(for: LocalMovie.self)
+    private let repository: MovieRepository? = nil
 
     var body: some Scene {
         WindowGroup {
-            TabBar()
-                .environmentObject(movieRepository)
-                .environmentObject(router)
+            if let a = try? ModelContainer(for: LocalMovie.self) {
+                let movieRepository = MovieRepository(modelContainer: a)
+                TabBar()
+                    .environmentObject(movieRepository)
+                    .modelContainer(a)
+                    .onAppear { movieRepository.fetchMovies() }
+            }
         }
     }
 }
