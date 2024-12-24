@@ -17,18 +17,18 @@ struct MovieImagePreviewView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: MovieImagePreviewConstants.IMAGE_HEIGHT)
-                    .clipShape(RoundedRectangle(cornerRadius: MovieImagePreviewConstants.CORNER_RADIUS))
+                    .frame(height: MovieImagePreviewConstants.imageHeight)
+                    .clipShape(RoundedRectangle(cornerRadius: MovieImagePreviewConstants.cornerRadius))
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: MovieImagePreviewConstants.IMAGE_HEIGHT)
+                    .frame(height: MovieImagePreviewConstants.imageHeight)
                     .foregroundColor(Colors.inputFieldIconColor)
             }
 
             Button(action: { showingImagePicker = true }) {
-                Text(imageData == nil ? MovieImagePreviewConstants.ADD_IMAGE_TEXT : MovieImagePreviewConstants.CHANGE_IMAGE_TEXT)
+                Text(imageData == nil ? MovieImagePreviewConstants.addImageText : MovieImagePreviewConstants.changeImageText)
             }
         }
         .sheet(isPresented: $showingImagePicker) {
@@ -39,8 +39,9 @@ struct MovieImagePreviewView: View {
 }
 
 private enum MovieImagePreviewConstants {
-    static let IMAGE_HEIGHT: CGFloat = 300.0
-    static let CORNER_RADIUS: CGFloat = 10.0
-    static let ADD_IMAGE_TEXT: String = "Add Image"
-    static let CHANGE_IMAGE_TEXT: String = "Change Image"
+    static let imageHeight: CGFloat = 300.0
+    static let cornerRadius: CGFloat = 10.0
+    static let addImageText: String = NSLocalizedString("addImageText", comment: "Text for the 'Add Image' button")
+    static let changeImageText: String = NSLocalizedString("changeImageText", comment: "Text for the 'Change Image' button")
+        
 }
