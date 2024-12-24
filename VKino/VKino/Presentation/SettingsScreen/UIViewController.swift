@@ -42,9 +42,7 @@ class SettingsViewController: UIViewController {
         return segmentedControl
     }()
 
-    private let isImplemented = false
-//    private let isImplemented = true
-
+    private let isImplemented = true // Feature: change this flag to implement localization
 
     // MARK: - Lifecycle Methods
 
@@ -107,12 +105,12 @@ class SettingsViewController: UIViewController {
                 message: Alerts.languageChangeMessage,
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: Alerts.cancel, style: .cancel, handler: { _ in
+            alert.addAction(UIAlertAction(title: Strings.cancelButton, style: .cancel, handler: { _ in
                 let currentSelectedLanguage = UserDefaults.standard.array(forKey: "AppleLanguages")?.first as? String ?? "ru"
                 self.languageSegmentedControl.selectedSegmentIndex = (currentSelectedLanguage == "ru") ? 0 : 1
             }))
 
-            alert.addAction(UIAlertAction(title: Alerts.ok, style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: Strings.okButton, style: .default, handler: { _ in
                 UserDefaults.standard.set([selectedLanguage], forKey: "AppleLanguages")
                 UserDefaults.standard.synchronize()
                 exit(0)
@@ -125,7 +123,7 @@ class SettingsViewController: UIViewController {
                 message: Alerts.willBeImplementedLater,
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: Alerts.ok, style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: Strings.okButton, style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         }
     }
@@ -133,18 +131,18 @@ class SettingsViewController: UIViewController {
     // MARK: - Helper Methods
 
     private func loadSettings() {
-            if UserDefaults.standard.object(forKey: "SelectedTheme") == nil {
-                themeSegmentedControl.selectedSegmentIndex = 2
-                UserDefaults.standard.set(2, forKey: "SelectedTheme")
-            } else {
-                let selectedTheme = UserDefaults.standard.integer(forKey: "SelectedTheme")
-                themeSegmentedControl.selectedSegmentIndex = selectedTheme
-            }
-            applyTheme(selectedIndex: themeSegmentedControl.selectedSegmentIndex)
-
-            let selectedLanguage = UserDefaults.standard.array(forKey: "AppleLanguages")?.first as? String ?? "ru"
-            languageSegmentedControl.selectedSegmentIndex = (selectedLanguage == "ru") ? 0 : 1
+        if UserDefaults.standard.object(forKey: "SelectedTheme") == nil {
+            themeSegmentedControl.selectedSegmentIndex = 2
+            UserDefaults.standard.set(2, forKey: "SelectedTheme")
+        } else {
+            let selectedTheme = UserDefaults.standard.integer(forKey: "SelectedTheme")
+            themeSegmentedControl.selectedSegmentIndex = selectedTheme
         }
+        applyTheme(selectedIndex: themeSegmentedControl.selectedSegmentIndex)
+
+        let selectedLanguage = UserDefaults.standard.array(forKey: "AppleLanguages")?.first as? String ?? "ru"
+        languageSegmentedControl.selectedSegmentIndex = (selectedLanguage == "ru") ? 0 : 1
+    }
 
     private func applyTheme(selectedIndex: Int) {
         guard let window = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
@@ -181,8 +179,5 @@ class SettingsViewController: UIViewController {
 
         static let notice = NSLocalizedString("Notice", comment: "")
         static let willBeImplementedLater = NSLocalizedString("WillBeImplementedLater", comment: "")
-
-        static let cancel = NSLocalizedString("Cancel", comment: "")
-        static let ok = NSLocalizedString("OK", comment: "")
     }
 }

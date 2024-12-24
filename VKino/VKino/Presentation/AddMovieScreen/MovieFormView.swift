@@ -26,12 +26,6 @@ struct MovieFormView: View {
             Divider()
 
             VStack(alignment: .leading, spacing: Dimensions.Spacing.normal) {
-//                inputField(placeholder: "Enter category", text: $movie.category, systemImage: "books.vertical")
-//                inputField(placeholder: "Enter duration", text: $movie.duration, systemImage: "clock")
-//                inputField(placeholder: "Enter description", text: $movie.description, systemImage: "line.3.horizontal")
-//                inputField(placeholder: "Enter actors", text: $movie.actors, systemImage: "person.3.sequence")
-//                inputField(placeholder: "Enter author", text: $movie.author, systemImage: "person")
-//                inputField(placeholder: "Enter rating", text: $movie.rating, systemImage: "star.fill", iconColor: .yellow)
                 inputField(placeholder: NSLocalizedString("enter_category", comment: "Placeholder for category input"), text: $movie.category, systemImage: "books.vertical")
                 inputField(placeholder: NSLocalizedString("enter_duration", comment: "Placeholder for duration input"), text: $movie.duration, systemImage: "clock")
                 inputField(placeholder: NSLocalizedString("enter_description", comment: "Placeholder for description input"), text: $movie.description, systemImage: "line.3.horizontal")

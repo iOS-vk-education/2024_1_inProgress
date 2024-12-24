@@ -42,7 +42,7 @@ struct SearchView<Content: View>: View {
                 .cornerRadius(Dimensions.CornerRadius.xLarge)
                 
                 if showCancelButton {
-                    Button("Cancel") {
+                    Button(Strings.cancelButton) {
                         searchViewModel.searchText = ""
                         showCancelButton = false
                         UIApplication.shared.endEditing()

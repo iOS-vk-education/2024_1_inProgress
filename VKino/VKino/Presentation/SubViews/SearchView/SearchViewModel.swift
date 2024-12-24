@@ -24,17 +24,17 @@ class SearchViewModel: ObservableObject {
     }
 
     private func monitorSearchTextChanges() {
-            $searchText
-                .debounce(for: .seconds(1), scheduler: DispatchQueue.main) // Задержка 2 секунды
-                .removeDuplicates() // Игнорирует одинаковые значения
-                .sink { [weak self] newText in
-                    guard let self = self else { return }
-                    Task {
-                        await self.handleSearchTextChange(newText)
-                    }
+        $searchText
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] newText in
+                guard let self = self else { return }
+                Task {
+                    await self.handleSearchTextChange(newText)
                 }
-                .store(in: &cancellables)
-        }
+            }
+            .store(in: &cancellables)
+    }
 
     private func handleSearchTextChange(_ text: String) async {
         if !text.isEmpty {

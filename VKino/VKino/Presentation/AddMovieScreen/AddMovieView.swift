@@ -77,21 +77,21 @@ struct AddMovieView: View {
             }
         }
         .alert(Alerts.errorTitle, isPresented: $viewModel.showEmptyTitleAlert) {
-            Button(Alerts.okButtonTitle, role: .cancel) { }
+            Button(Strings.okButton, role: .cancel) { }
         } message: {
             Text(Alerts.emptyTitleMessage)
         }
         .alert(Alerts.errorTitle, isPresented: $viewModel.showEmptyImageAlert) {
-            Button(Alerts.okButtonTitle, role: .cancel) { }
+            Button(Strings.okButton, role: .cancel) { }
         } message: {
             Text(Alerts.emptyImageMessage)
         }
         .alert(Alerts.errorTitle, isPresented: $viewModel.showInvalidRatingAlert) {
-            Button(Alerts.okButtonTitle, role: .cancel) { }
+            Button(Strings.okButton, role: .cancel) { }
         } message: {
             Text(Alerts.invalidRatingMessage)
         }
-        .alert(Alerts.deleteConfirmationTitle, isPresented: $viewModel.showDeleteConfirmation) {
+        .alert(Strings.deleteButton, isPresented: $viewModel.showDeleteConfirmation) {
             deleteAlertActions
         } message: {
             Text(Alerts.deleteConfirmationMessage)
@@ -120,10 +120,10 @@ struct AddMovieView: View {
 
     private var deleteAlertActions: some View {
         Group {
-            Button(Alerts.deleteButtonTitle, role: .destructive) {
+            Button(Strings.deleteButton, role: .destructive) {
                 deleteMovie()
             }
-            Button(Alerts.cancelButtonTitle, role: .cancel) {}
+            Button(Strings.cancelButton, role: .cancel) {}
         }
     }
 }
@@ -163,9 +163,5 @@ private enum Alerts {
     static let emptyTitleMessage: String = NSLocalizedString("emptyTitleMessage", comment: "Message for empty title")
     static let emptyImageMessage: String = NSLocalizedString("emptyImageMessage", comment: "Message for empty image")
     static let invalidRatingMessage: String = NSLocalizedString("invalidRatingMessage", comment: "Message for invalid rating")
-    static let deleteConfirmationTitle: String = NSLocalizedString("deleteConfirmationTitle", comment: "Title for delete confirmation alert")
     static let deleteConfirmationMessage: String = NSLocalizedString("deleteConfirmationMessage", comment: "Message for delete confirmation alert")
-    static let deleteButtonTitle: String = NSLocalizedString("deleteButtonTitle", comment: "Delete button title")
-    static let cancelButtonTitle: String = NSLocalizedString("cancelButtonTitle", comment: "Cancel button title")
-    static let okButtonTitle: String = NSLocalizedString("okButtonTitle", comment: "OK button title")
 }

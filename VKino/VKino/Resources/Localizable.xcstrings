@@ -18,41 +18,23 @@
         }
       }
     },
-    "Cancel" : {
+    "back" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancel"
+            "value" : "Back"
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отмена"
+            "state" : "needs_review",
+            "value" : "Назад"
           }
         }
       }
     },
-    "cancel_button_label" : {
-      "comment" : "Label for cancel button",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отмена"
-          }
-        }
-      }
-    },
-    "cancelButtonTitle" : {
-      "comment" : "Cancel button title",
+    "cancel" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -101,6 +83,22 @@
         }
       }
     },
+    "delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить"
+          }
+        }
+      }
+    },
     "delete_alert_message" : {
       "comment" : "Message for delete confirmation alert",
       "localizations" : {
@@ -135,40 +133,6 @@
         }
       }
     },
-    "delete_button_label" : {
-      "comment" : "Label for delete button",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Удалить"
-          }
-        }
-      }
-    },
-    "deleteButtonTitle" : {
-      "comment" : "Delete button title",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Удалить"
-          }
-        }
-      }
-    },
     "deleteConfirmationMessage" : {
       "comment" : "Message for delete confirmation alert",
       "localizations" : {
@@ -182,23 +146,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Вы уверены, что хотите удалить этот фильм?"
-          }
-        }
-      }
-    },
-    "deleteConfirmationTitle" : {
-      "comment" : "Title for delete confirmation alert",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Удалить"
           }
         }
       }
@@ -538,7 +485,7 @@
         }
       }
     },
-    "OK" : {
+    "ok" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -548,24 +495,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ок"
-          }
-        }
-      }
-    },
-    "okButtonTitle" : {
-      "comment" : "OK button title",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ok"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Ок"
           }
         }

@@ -17,6 +17,8 @@ struct TabBar: View {
         case add
         case settings
     }
+    
+    private var settingsView = SettingsView()
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -55,7 +57,7 @@ struct TabBar: View {
                 }
                 .tag(ScreenTab.add)
 
-            SettingsView()
+            settingsView
                 .tabItem {
                     Image(systemName: "gearshape.fill")
                 }
