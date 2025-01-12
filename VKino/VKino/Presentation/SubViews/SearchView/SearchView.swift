@@ -62,7 +62,7 @@ struct SearchView<Content: View>: View {
                                 .padding(.top,  Dimensions.Spacing.xSmall)
                                 .onTapGesture {
                                     onMovieSelected(movie)
-                                    if self.source == .homeView {
+                                    if self.source == .recomendationsView {
                                         router.path.append(.movieDetailsView(movie: Movie.from(movie), source: .searchView))
                                     }
 

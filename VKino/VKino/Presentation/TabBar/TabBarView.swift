@@ -29,7 +29,7 @@ struct TabBar: View {
                 selectedTab: $selectedTab
             )
                 .tabItem {
-                    Image(systemName: "star.fill")
+                    Image(systemName: "trophy.fill")
                         .renderingMode(.template)
                 }
                 .tag(ScreenTab.recomendations)

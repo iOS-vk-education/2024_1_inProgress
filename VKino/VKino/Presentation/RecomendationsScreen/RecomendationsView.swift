@@ -26,41 +26,47 @@ struct RecomendationsView: View {
 
     var body: some View {
         NavigationStack(path: $router.path) {
-            ScrollView {
-                LazyVGrid(
-                    columns: [
-                        GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall),
-                        GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall)
-                    ],
-                    spacing: Dimensions.Spacing.normal
-                ) {
-                    ForEach(viewModel.movies, id: \.id) { movie in
-                        moviePreview(movie: movie) {
-                            router.path.append(.movieDetailsView(movie: movie, source: .recomendationsView))
-                        }.onAppear {
-                            if movie == viewModel.movies.last {
-                                Task {
-                                    await viewModel.loadMovies()
+            SearchView(
+                searchViewModel: searchViewModel,
+                onMovieSelected: { movie in },
+                source: .recomendationsView
+            ) {
+                ScrollView {
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall),
+                            GridItem(.flexible(), spacing: Dimensions.Spacing.xSmall)
+                        ],
+                        spacing: Dimensions.Spacing.normal
+                    ) {
+                        ForEach(viewModel.movies, id: \.id) { movie in
+                            moviePreview(movie: movie) {
+                                router.path.append(.movieDetailsView(movie: movie, source: .recomendationsView))
+                            }.onAppear {
+                                if movie == viewModel.movies.last {
+                                    Task {
+                                        await viewModel.loadMovies()
+                                    }
                                 }
                             }
                         }
                     }
+                    .padding(.horizontal, Dimensions.Spacing.normal)
                 }
-                .padding(.horizontal, Dimensions.Spacing.normal)
-            }
-            .navigationDestination(for: MovieRoute.self) { route in
-                switch route {
-                case .movieDetailsView(let movie, let source):
-                    MovieDetailsView(movie: movie, source: source, selectedTab: $selectedTab)
-                case .addMovieView(let movie):
-                    AddMovieView(
-                        searchViewModel: searchViewModel,
-                        movie: movie,
-                        selectedTab: $selectedTab,
-                        source: .movieDetailsView
-                    )
-                default: Spacer()
-                    // no - op
+                .navigationDestination(for: MovieRoute.self) { route in
+                    switch route {
+                    case .movieDetailsView(let movie, let source):
+                        MovieDetailsView(movie: movie, source: source, selectedTab: $selectedTab)
+                    case .addMovieView(let movie):
+                        AddMovieView(
+                            searchViewModel: searchViewModel,
+                            movie: movie,
+                            selectedTab: $selectedTab,
+                            source: .movieDetailsView
+                        )
+                    default: Spacer()
+                        // no - op
+                    }
                 }
             }
         }

@@ -41,6 +41,20 @@ class MovieRepository: ObservableObject {
         }
     }
 
+    func removeAllMovies() {
+        do {
+            let allMovies = try modelContext.fetch(desc)
+            for movie in allMovies {
+                modelContext.delete(movie)
+            }
+            saveContext()
+            fetchMovies()
+        } catch {
+            print("Error removing all movies: \(error.localizedDescription)")
+            /* does nothing */
+        }
+    }
+
     func updateMovie(_ updatedMovie: Movie) {
         removeMovie(by: updatedMovie.id)
         addMovie(updatedMovie)

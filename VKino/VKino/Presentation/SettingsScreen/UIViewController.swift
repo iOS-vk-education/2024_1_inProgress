@@ -5,8 +5,12 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SettingsViewController: UIViewController {
+    
+    @EnvironmentObject var movieRepository: MovieRepository
+
     // MARK: - UI Elements
 
     private let themeLabel: UILabel = {
