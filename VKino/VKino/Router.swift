@@ -29,6 +29,6 @@ enum AddMovieNavigationSource: Hashable {
 }
 
 enum SearchViewSource: Hashable {
-    case homeView
+    case recomendationsView
     case addMovieView
 }
