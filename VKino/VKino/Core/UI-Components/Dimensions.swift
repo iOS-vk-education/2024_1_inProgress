@@ -24,5 +24,6 @@ enum Dimensions {
         static let normal: CGFloat = 6.0
         static let large: CGFloat = 8.0
         static let xLarge: CGFloat = 10.0
+        static let xxLarge: CGFloat = 12.0
     }
 }

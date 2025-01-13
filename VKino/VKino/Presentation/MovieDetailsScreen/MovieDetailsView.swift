@@ -31,6 +31,7 @@ struct MovieDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Dimensions.Spacing.normal) {
                 movieHeaderView
+                    //.frame(maxWidth: .infinity, alignment: .center)
                 movieDetailsView
                 if let votes = viewModel.movie.votes {
                     ratingAndVotesView(rating: viewModel.movie.rating, votes: votes)
@@ -76,6 +77,8 @@ private extension MovieDetailsView {
                 .foregroundColor(.white)
                 .padding()
         }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(maxHeight: Const.Sizes.posterHeight)
     }
 
     var movieDetailsView: some View {
@@ -120,7 +123,7 @@ private extension MovieDetailsView {
                     viewModel.onSaveClicked()
                     router.path.removeLast()
                 } label: {
-                    Image(systemName: "square.and.arrow.down")
+                    Image(systemName: "arrow.down.doc")
                         .foregroundColor(.blue)
                 }
             case .homeView:
