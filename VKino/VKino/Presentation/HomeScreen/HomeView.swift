@@ -36,10 +36,18 @@ struct HomeView: View {
                     spacing: Dimensions.Spacing.normal
                 ) {
                     ForEach(movies, id: \.id) { movie in
-                        moviePreview(movie: movie) {
-                            searchViewModel.searchText = ""
-                            router.path.append(.movieDetailsView(movie: movie, source: .homeView))
+                        ZStack {
+                            RoundedRectangle(cornerRadius:  Dimensions.CornerRadius.xxLarge)
+                                .fill(Color(.systemBackground))
+                                .shadow(color: Color(.systemFill), radius: Dimensions.CornerRadius.large, x: 0, y: 4)
+                            moviePreview(movie: movie) {
+                                searchViewModel.searchText = ""
+                                router.path.append(.movieDetailsView(movie: movie, source: .homeView))
+                            }
+                            .padding(Dimensions.Spacing.xSmall)
                         }
+                        .padding(.horizontal, Dimensions.Spacing.xSmall)
+                        
                     }
                 }
                 .padding(.horizontal, Dimensions.Spacing.normal)
@@ -48,15 +56,8 @@ struct HomeView: View {
                 switch route {
                 case .movieDetailsView(let movie, let source):
                     MovieDetailsView(movie: movie, source: source, selectedTab: $selectedTab)
-                case .addMovieView(let movie):
-                    AddMovieView(
-                        searchViewModel: searchViewModel,
-                        movie: movie,
-                        selectedTab: $selectedTab,
-                        source: .movieDetailsView
-                    )
-                case .homeView:
-                    HomeView(searchViewModel: searchViewModel, homeViewModel: viewModel, selectedTab: $selectedTab)
+                    
+                default: Spacer()
                 }
             }
         }.onReceive(movieRepository.$movies) { movies in

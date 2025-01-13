@@ -15,7 +15,7 @@ class RecomendationsViewModel: ObservableObject {
     
     private let networkService = NetworkService()
     
-    private var isLoading = false
+    @Published var isLoading = false
     private var cancellables = Set<AnyCancellable>()
     
     init() {

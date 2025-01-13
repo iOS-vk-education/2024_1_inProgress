@@ -111,7 +111,7 @@ struct AddMovieView: View {
             Button(action: {
                 saveMovie()
             }) {
-                Image(systemName: "square.and.arrow.down")
+                Image(systemName: "arrow.down.doc")
                     .font(.title2)
                     .foregroundColor(Colors.primaryButtonColor)
             }

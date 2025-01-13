@@ -52,6 +52,10 @@ struct RecomendationsView: View {
                         }
                     }
                     .padding(.horizontal, Dimensions.Spacing.normal)
+                    if (viewModel.isLoading) {
+                        ProgressView()
+                            .frame(width: Const.proggressViewSize, height: Const.proggressViewSize)
+                    }
                 }
                 .navigationDestination(for: MovieRoute.self) { route in
                     switch route {
@@ -71,4 +75,8 @@ struct RecomendationsView: View {
             }
         }
     }
+}
+
+private enum Const {
+    static let proggressViewSize: CGFloat = 60
 }

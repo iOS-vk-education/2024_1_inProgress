@@ -29,7 +29,7 @@ struct TabBar: View {
                 selectedTab: $selectedTab
             )
                 .tabItem {
-                    Image(systemName: "trophy.fill")
+                    Image(systemName: "house.fill")
                         .renderingMode(.template)
                 }
                 .tag(ScreenTab.recomendations)
@@ -40,7 +40,7 @@ struct TabBar: View {
                 selectedTab: $selectedTab
             )
                 .tabItem {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "heart.fill")
                         .renderingMode(.template)
                 }
                 .tag(ScreenTab.home)
