@@ -9,7 +9,16 @@ import SwiftUI
 
 class SettingsViewController: UIViewController {
 
-    @EnvironmentObject var movieRepository: MovieRepository
+    let movieRepository: MovieRepository
+    
+    init(movieRepository: MovieRepository) {
+        self.movieRepository = movieRepository
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - UI Elements
 
@@ -18,6 +27,16 @@ class SettingsViewController: UIViewController {
         label.text = Alerts.theme
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private let deleteButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(Alerts.deleteAllButton, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 8
+        button.backgroundColor = .systemRed
+        return button
     }()
 
     private let themeSegmentedControl: UISegmentedControl = {
@@ -61,11 +80,13 @@ class SettingsViewController: UIViewController {
         view.addSubview(themeSegmentedControl)
         view.addSubview(languageLabel)
         view.addSubview(changeLanguageButton)
+        view.addSubview(deleteButton)
 
         setupConstraints()
 
         themeSegmentedControl.addTarget(self, action: #selector(themeChanged(_:)), for: .valueChanged)
         changeLanguageButton.addTarget(self, action: #selector(changeLanguageTapped), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteMovies), for: .touchUpInside)
     }
 
     private func setupConstraints() {
@@ -81,11 +102,37 @@ class SettingsViewController: UIViewController {
             languageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 
             changeLanguageButton.topAnchor.constraint(equalTo: languageLabel.bottomAnchor, constant: 10),
-            changeLanguageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
+            changeLanguageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+        
+            deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            deleteButton.heightAnchor.constraint(equalToConstant: 40),
+            deleteButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+            deleteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
 
     // MARK: - Actions
+    
+    @objc private func deleteMovies() {
+        let alert = UIAlertController(
+            title: Alerts.deleteAllButton,
+            message: Alerts.deleteAllMessage,
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: Strings.cancelButton, style: .cancel, handler: nil))
+        
+        alert.addAction(UIAlertAction(
+                title: Strings.okButton,
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.movieRepository.removeAllMovies()
+                }
+            )
+        )
+        
+        present(alert, animated: true, completion: nil)
+    }
 
     @objc private func themeChanged(_ sender: UISegmentedControl) {
         let selectedIndex = sender.selectedSegmentIndex
@@ -156,6 +203,8 @@ class SettingsViewController: UIViewController {
 
         static let languageChangeTitle = NSLocalizedString("LanguageChangeTitle", comment: "")
         static let languageChangeMessage = NSLocalizedString("LanguageChangeMessage", comment: "")
+        static let deleteAllButton = NSLocalizedString("deleteAllButton", comment: "")
+        static let deleteAllMessage = NSLocalizedString("deleteAllMessage", comment: "")
     }
 
 }
