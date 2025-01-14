@@ -149,6 +149,40 @@
         }
       }
     },
+    "deleteAllButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all movies"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить все фильмы"
+          }
+        }
+      }
+    },
+    "deleteAllMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all saved movies?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы уверены что хотите удалить все сохраненные фильмы?"
+          }
+        }
+      }
+    },
     "deleteConfirmationMessage" : {
       "comment" : "Message for delete confirmation alert",
       "localizations" : {

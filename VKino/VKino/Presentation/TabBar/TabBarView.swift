@@ -10,6 +10,7 @@ import SwiftUI
 struct TabBar: View {
     @State private var selectedTab: ScreenTab = .home
     @StateObject private var router = Router()
+    @EnvironmentObject private var rep: MovieRepository
 
     enum ScreenTab {
         case recomendations
@@ -18,9 +19,10 @@ struct TabBar: View {
         case settings
     }
     
-    private var settingsView = SettingsView()
+    //private var settingsView = SettingsView(repository: repository)
 
     var body: some View {
+        let settingsView = SettingsView(repository: rep)
         TabView(selection: $selectedTab) {
             
             RecomendationsView(

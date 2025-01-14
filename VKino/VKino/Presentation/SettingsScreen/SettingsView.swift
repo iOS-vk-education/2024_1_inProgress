@@ -9,8 +9,10 @@ import SwiftUI
 import UIKit
 
 struct SettingsView: UIViewControllerRepresentable {
+    let repository: MovieRepository
+    
     func makeUIViewController(context: Context) -> SettingsViewController {
-        return SettingsViewController()
+        return SettingsViewController(movieRepository: repository)
     }
 
     func updateUIViewController(_ uiViewController: SettingsViewController, context: Context) {
